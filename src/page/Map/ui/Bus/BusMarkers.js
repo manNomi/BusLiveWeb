@@ -2,16 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Marker } from "react-naver-maps";
 import useBus from "../../model/useBus";
 import busIcon from "../../assets/bus.svg";
-import greenBusIcon from "../../assets/green_bus.svg";
-import yellowBusIcon from "../../assets/yeloow_bus.svg";
-import redBusIcon from "../../assets/red_bus.svg";
 import useBusData from "../../../../entities/Bus/useBusData";
 import { useParams } from "react-router-dom";
 import ReactDOMServer from "react-dom/server";
 import BusStopIcon from "../../assets/BusIcon";
 import BusStopIconLast from "../../assets/BusIconLast";
 
-const BusMarkers = () => {
+const TestBusMarkers = () => {
   // 버스 좌표 상태
   const [bus, setBus, resetBus, moveBusEvent] = useBus();
 
@@ -54,6 +51,7 @@ const BusMarkers = () => {
               lat: newBusData.lat,
               lng: newBusData.lng,
               lastNode: newBusData.lastNode, // 새로운 노드 정보로 업데이트
+              angle: newBusData.angle, // angle 값 추가
             };
           }
 
@@ -79,6 +77,7 @@ const BusMarkers = () => {
   }, [isBusDataUpdated]);
 
   const busStopId = useParams("id").id;
+
   // busStopId가 있을 때 가장 가까운 버스 정류장 선택
   const setBusOnly = (bus) => {
     const candidates = bus.filter(
@@ -87,6 +86,7 @@ const BusMarkers = () => {
     candidates.sort((a, b) => b.lastNode - a.lastNode); // 내림차순 정렬
     return candidates[0]; // 가장 큰 lastNode를 가진 항목 반환
   };
+
   const closestBusLocation = busStopId ? setBusOnly(bus) : null;
 
   return (
@@ -105,13 +105,13 @@ const BusMarkers = () => {
                 <BusStopIconLast
                   color={closestBusLocation.congestion}
                   width={40}
-                  heigth={40}
+                  height={40}
                 />
               ) : (
                 <BusStopIcon
                   color={closestBusLocation.congestion}
                   width={40}
-                  heigth={40}
+                  height={40}
                 />
               )
             ),
@@ -120,9 +120,15 @@ const BusMarkers = () => {
       ) : (
         bus.map((busLocation, index) => {
           // 유효성 검사: position이 없을 경우 예외 처리
-          if (!busLocation || !busLocation.lat || !busLocation.lng) {
+          if (
+            !busLocation ||
+            !busLocation.lat ||
+            !busLocation.lng ||
+            busLocation.angle === undefined
+          ) {
             return null; // 유효하지 않은 경우 렌더링하지 않음
           }
+
           return (
             <Marker
               key={index}
@@ -130,7 +136,14 @@ const BusMarkers = () => {
                 new window.naver.maps.LatLng(busLocation.lat, busLocation.lng)
               }
               icon={{
-                content: `<img src="${busIcon}" width="20" height="20" />`,
+                content: `<img 
+                  src="${busIcon}" 
+                  width="20" 
+                  height="20" 
+                  style="transform: rotate(${
+                    (busLocation.angle * 180) / Math.PI
+                  }deg);" 
+                />`,
               }}
             />
           );
@@ -140,4 +153,4 @@ const BusMarkers = () => {
   );
 };
 
-export default BusMarkers;
+export default TestBusMarkers;

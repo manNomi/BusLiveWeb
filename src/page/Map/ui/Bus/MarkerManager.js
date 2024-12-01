@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import OpenLayersMap from "./OLMap";
 import MarkerManager from "./MarkerManager";
 import useTestBus from "../../model/useTestBus";
@@ -10,27 +10,15 @@ const TestBusMarkers = () => {
   const [busData, loading, error] = useTestBusData();
   const vectorSourceRef = useRef(new VectorSource());
 
-  useEffect(() => {
-    if (vectorSourceRef.current) {
-      const features = vectorSourceRef.current.getFeatures();
-      console.log("Features in vectorSourceRef:", features);
-      if (features.length === 0) {
-        console.warn("No features found in vectorSourceRef");
-      }
-    } else {
-      console.error("vectorSourceRef.current is null or undefined");
-    }
-  }, [bus, vectorSourceRef.current]);
-
   // 버스 데이터 설정
-  useEffect(() => {
+  React.useEffect(() => {
     if (busData) {
       setBus(busData);
     }
   }, [busData, setBus]);
 
   // 이동 이벤트 실행
-  useEffect(() => {
+  React.useEffect(() => {
     const stopMoving = moveBusEvent(); // 이동 이벤트 시작
     return () => stopMoving(); // 이동 이벤트 정리
   }, [moveBusEvent]);
