@@ -14,14 +14,22 @@ import BusMarkersOL from "../Bus/BusMarkersOL";
 import BusMarkerTestOL from "../Bus/BusMarkersOLTest";
 import { OSM } from "ol/source";
 import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
+import DirectionsModal from "../Direction/Direction";
+import DirectionLine from "../DirectionLine/DirectionLine";
+import useRouteData from "../../../../shared/recoil/useBusRoute";
 
 const OLMapComponent = ({ center, zoom }) => {
   const [olMapRef, setOlMapRef] = useState(null);
   const [vectorSource, setVectorSource] = useState(null);
+  const [sourceLine, setLineSource] = useState(null);
   const [check, setCheck] = useCheckAtom();
+  const [busRoute] = useRouteData();
 
   useEffect(() => {
     const newVectorSource = new VectorSource({
+      features: [],
+    });
+    const newLineSource = new VectorSource({
       features: [],
     });
 
@@ -44,6 +52,7 @@ const OLMapComponent = ({ center, zoom }) => {
     });
 
     setVectorSource(newVectorSource);
+    setLineSource(newLineSource);
     setOlMapRef(newMapInstance);
 
     return () => {
@@ -79,6 +88,13 @@ const OLMapComponent = ({ center, zoom }) => {
           ) : (
             <BusMarkersOL mapInstance={olMapRef} vectorSource={vectorSource} />
           )}
+          {busRoute.length !== 0 && check.route && (
+            <DirectionLine
+              map={olMapRef}
+              coordinates={busRoute}
+              vectorSource={sourceLine}
+            />
+          )}
         </>
       )}
     </>
@@ -91,6 +107,7 @@ const MyNaverMap = () => {
   const [zoom, setZoom] = useState(13);
   const [naverMapMove, setMove] = useState(false);
   const naverMapRef = useRef(null);
+  const [check, setCheck] = useCheckAtom();
 
   useEffect(() => {
     if (naverMapMove) {
@@ -141,6 +158,10 @@ const MyNaverMap = () => {
             <OLMapComponent center={center} zoom={zoom} />
           </div>
         </MapDiv>
+        <DirectionsModal
+          isOpen={check.direction && check.route}
+          onClose={() => setCheck("both_click")}
+        />
       </Style.Container>
       <Advertise />
     </>

@@ -60,6 +60,13 @@ const Aside = () => {
                 setCheck("test");
               }}
             />
+            <CheckBox
+              text="경로"
+              check={check.direction || check.route}
+              change={() => {
+                setCheck("both_click");
+              }}
+            />
           </div>
         )}
       </Style.Aside>
