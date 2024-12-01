@@ -11,11 +11,14 @@ import { transform } from "ol/proj";
 import { Map as OLMap, View as OLView } from "ol";
 import TileLayer from "ol/layer/Tile";
 import BusMarkersOL from "../Bus/BusMarkersOL";
+import BusMarkerTestOL from "../Bus/BusMarkersOLTest";
 import { OSM } from "ol/source";
+import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
 
 const OLMapComponent = ({ center, zoom }) => {
   const [olMapRef, setOlMapRef] = useState(null);
   const [vectorSource, setVectorSource] = useState(null);
+  const [check, setCheck] = useCheckAtom();
 
   useEffect(() => {
     const newVectorSource = new VectorSource({
@@ -67,7 +70,16 @@ const OLMapComponent = ({ center, zoom }) => {
   return (
     <>
       {olMapRef && vectorSource && (
-        <BusMarkersOL mapInstance={olMapRef} vectorSource={vectorSource} />
+        <>
+          {check.test ? (
+            <BusMarkerTestOL
+              mapInstance={olMapRef}
+              vectorSource={vectorSource}
+            />
+          ) : (
+            <BusMarkersOL mapInstance={olMapRef} vectorSource={vectorSource} />
+          )}
+        </>
       )}
     </>
   );

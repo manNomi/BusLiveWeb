@@ -10,13 +10,12 @@ const useBus = () => {
   const intervalRef = useRef(null);
 
   // 버스 데이터 설정
-  const setBusAdd = (data) => {
+  const setBusAdd = useCallback((data) => {
     if (!Array.isArray(data)) {
       console.warn("Invalid bus data:", data);
       return;
     }
 
-    // 초기 각도 설정
     const initializedBus = data.map((busLocation) => {
       const nextNode = getNextNode(busLocation);
       const angle = nextNode
@@ -33,25 +32,30 @@ const useBus = () => {
     });
 
     setBus(initializedBus);
-  };
+  }, []);
 
   // 버스 데이터 리셋
-  const resetBusData = () => {
+  const resetBusData = useCallback(() => {
+    console.log("Resetting bus data...");
     setBus([]);
     clearIntervalIfActive();
-  };
+  }, []);
 
   // Interval 정리 함수
-  const clearIntervalIfActive = () => {
+  const clearIntervalIfActive = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
+      console.log("Interval cleared");
     }
-  };
+  }, []);
 
   // 버스 이동 이벤트
   const moveBusEvent = useCallback(() => {
-    if (intervalRef.current) return; // 이미 실행 중이면 중단
+    if (intervalRef.current) {
+      console.warn("Move event already running");
+      return;
+    }
 
     intervalRef.current = setInterval(() => {
       setBus((prevBus) =>
@@ -59,7 +63,6 @@ const useBus = () => {
           if (!busLocation) return busLocation;
 
           const nextNode = getNextNode(busLocation);
-
           if (!nextNode) return busLocation;
 
           const distance = getDistanceInMeters(
@@ -83,28 +86,34 @@ const useBus = () => {
               lat: nextNode.lat,
               lng: nextNode.lng,
               lastNode: nextNode.lastNode,
-              angle: nextAngle,
+              angle: nextAngle, // 각도 업데이트
             };
           }
 
           // 이동 계산
           const x = nextNode.lat - busLocation.lat;
           const y = nextNode.lng - busLocation.lng;
-          const timeToNextNode = distance / SPEED; // 남은 시간
-          const step = FRAME_RATE / (timeToNextNode * 1000); // 이동 비율
+          const step = (SPEED / distance) * (FRAME_RATE / 1000); // 이동 비율 계산
+
+          const angle = calculateAngle(
+            { lat: busLocation.lat, lng: busLocation.lng },
+            { lat: nextNode.lat, lng: nextNode.lng }
+          );
 
           return {
             ...busLocation,
             lat: busLocation.lat + x * step,
             lng: busLocation.lng + y * step,
-            angle: busLocation.angle, // 각도 유지
+            angle, // 실시간 각도 업데이트
           };
         })
       );
     }, FRAME_RATE);
 
+    console.log("Move event started");
+
     return () => clearIntervalIfActive();
-  }, []);
+  }, [clearIntervalIfActive]);
 
   return [bus, setBusAdd, resetBusData, moveBusEvent];
 };
@@ -114,6 +123,10 @@ const getNextNode = (busLocation) => {
   const currentNodeIndex = nodeLocation.findIndex(
     (node) => node.lastNode === parseInt(busLocation.lastNode, 10)
   );
+  if (currentNodeIndex === -1) {
+    console.warn("Node not found for:", busLocation.lastNode);
+    return null;
+  }
   return nodeLocation[(currentNodeIndex + 1) % nodeLocation.length];
 };
 
