@@ -5,10 +5,11 @@ import { Feature } from "ol";
 import Point from "ol/geom/Point";
 import { Icon, Style as OLStyle } from "ol/style";
 import { transform } from "ol/proj";
-import busIcon from "../../assets/bus.svg";
+import BusIcon from "../../assets/BusIcon";
 import useTestBus from "../../model/useTestBus";
 import useTestBusData from "../../../../entities/Bus/useTestBusData";
 import { useParams } from "react-router-dom";
+import ReactDOMServer from "react-dom/server";
 
 const BusMarkersOL = ({ mapInstance, vectorSource }) => {
   const [bus, setBus, resetBusData, moveBusEvent] = useTestBus();
@@ -43,11 +44,20 @@ const BusMarkersOL = ({ mapInstance, vectorSource }) => {
         geometry: new Point(transform([lng, lat], "EPSG:4326", "EPSG:3857")),
       });
 
+      const svgString = ReactDOMServer.renderToString(
+        <BusIcon width="300" height="300" color={3} />
+      );
+      const busIcon = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
+        svgString
+      )}`;
       feature.setStyle(
         new OLStyle({
           image: new Icon({
-            src: busIcon,
-            scale: 1,
+            src: busIcon, // SVG 데이터 URI 또는 파일 경로
+            scale: 0.1, // 아이콘 크기 조정 (필요에 따라 조정)
+            anchor: [0.5, 0.5], // 아이콘의 중심을 기준점으로 설정
+            anchorXUnits: "fraction", // X 기준 단위를 비율로 설정
+            anchorYUnits: "fraction", // Y 기준 단위를 비율로 설정
             rotation: angle || 0,
           }),
         })
@@ -103,11 +113,17 @@ const BusMarkersOL = ({ mapInstance, vectorSource }) => {
         ),
       });
 
+      const svgString = ReactDOMServer.renderToString(
+        <BusIcon width="500" height="500" color={1} />
+      );
+      const busIcon = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
+        svgString
+      )}`;
       feature.setStyle(
         new OLStyle({
           image: new Icon({
             src: busIcon,
-            scale: 0.5,
+            scale: 1,
             rotation: closestBus.angle || 0,
           }),
         })
