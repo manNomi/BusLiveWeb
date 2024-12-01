@@ -1,6 +1,7 @@
-import { useEffect } from "react";
-import BusStop from "./BusStop";
+import { Overlay } from "ol";
+import { fromLonLat } from "ol/proj";
 import ReactDOM from "react-dom/client";
+import BusStop from "./BusStop";
 
 const handleMarkerClick = (
   stopData,
@@ -13,15 +14,15 @@ const handleMarkerClick = (
   setBusID
 ) => {
   if (!busStopData) return;
-  const coord = new window.naver.maps.LatLng(
-    stopData.busPoint.lat,
-    stopData.busPoint.lng
-  );
 
-  // 기존 InfoWindow 삭제 (기존 오버레이가 있다면)
-  if (map.infoWindow) {
-    map.infoWindow.setMap(null);
+  // 좌표 변환
+  const coord = fromLonLat([stopData.busPoint.lng, stopData.busPoint.lat]);
+
+  // 기존 Overlay 삭제
+  if (map.overlay) {
+    map.removeOverlay(map.overlay);
   }
+
   // React 컴포넌트를 HTML로 렌더링
   const container = document.createElement("div");
   const root = ReactDOM.createRoot(container); // createRoot 사용
@@ -38,8 +39,8 @@ const handleMarkerClick = (
       stopData={stopData}
       setOptionEvent={() => setOptionEvent({ center: coord, zoom: 15 })}
       closeEvent={() => {
-        if (map.infoWindow) {
-          map.infoWindow.setMap(null);
+        if (map.overlay) {
+          map.removeOverlay(map.overlay);
           changePage("/home");
           setBusID("");
         }
@@ -47,13 +48,20 @@ const handleMarkerClick = (
     />
   );
 
-  const infoWindow = new window.naver.maps.InfoWindow({
+  // Overlay 생성
+  const overlay = new Overlay({
     position: coord,
-    content: container, // 렌더링된 HTML을 content로 전달
+    element: container,
+    stopEvent: false, // 클릭 이벤트가 맵으로 전파되지 않도록 설정
+    autoPan: true, // InfoWindow가 뷰포트 내에 있도록 자동 이동
+    autoPanAnimation: {
+      duration: 250, // 애니메이션 지속 시간
+    },
   });
-  // InfoWindow를 지도에 추가
-  infoWindow.open(map);
-  map.infoWindow = infoWindow; // 지도 객체에 저장해 관리
+
+  // Overlay를 지도에 추가
+  map.addOverlay(overlay);
+  map.overlay = overlay; // 지도 객체에 저장해 관리
 };
 
 export default handleMarkerClick;

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Marker, useMap } from "react-naver-maps";
+import { Feature } from "ol";
+import { Point } from "ol/geom";
+import { Style, Icon } from "ol/style";
+import { fromLonLat } from "ol/proj";
 import useBusStop from "../../model/useBusStop";
 import useNode from "../../model/useNodeInit";
 import {
@@ -13,8 +16,10 @@ import useBus from "../../model/useBus";
 import useTestBus from "../../model/useTestBus";
 import { useMapOptions } from "../../model/useMapOption";
 import useBusStopData from "../../../../entities/Bus/useBusStopClick";
+import busStopIcon from "../../assets/black_bus_stop.svg";
+import { Vector as VectorLayer, VectorSource } from "ol/layer";
 
-const Markers = () => {
+const MarkersOL = ({ map, vectorSource }) => {
   const [busStops, setBusAdd, setBusDelete] = useBusStop();
   const [nodeData, setNodeAdd, setNodeDelete] = useNode();
   const [check] = useCheckAtom();
@@ -22,11 +27,32 @@ const Markers = () => {
   const [, setBus, ,] = useBus();
   const [, setTestBus, ,] = useTestBus();
   const [, setOptionEvent] = useMapOptions();
-  const map = useMap(); // 지도 객체 가져오기
 
   const [retroBusStopData, setBusID, error] = useBusStopData(null);
   const [busStopData, setBusStopData] = useState(null);
 
+  const vectorLayer = new VectorLayer({ source: vectorSource });
+  map.addLayer(vectorLayer);
+
+  // 마커 스타일 생성
+  const createMarkerFeature = (lat, lng) => {
+    const feature = new Feature({
+      geometry: new Point(fromLonLat([lng, lat])),
+    });
+
+    feature.setStyle(
+      new Style({
+        image: new Icon({
+          src: busStopIcon, // 마커 아이콘 경로 설정
+          scale: 0.04,
+        }),
+      })
+    );
+
+    return feature;
+  };
+
+  // 버스 정류장 클릭 이벤트 처리
   useEffect(() => {
     if (!busStopData) return;
     setBusID(busStopData.busStopId);
@@ -47,11 +73,13 @@ const Markers = () => {
     }
   }, [retroBusStopData]);
 
+  // 노드 데이터 관리
   useEffect(() => {
     if (check.node) setNodeAdd(nodeLocation);
     else setNodeDelete();
   }, [check.node]);
 
+  // 하행 정류장 필터링
   useEffect(() => {
     if (check.low) {
       setBusAdd(busStop.filter((busStation) => busStation.lastNode < 36));
@@ -60,6 +88,7 @@ const Markers = () => {
     }
   }, [check.low, busStop]);
 
+  // 상행 정류장 필터링
   useEffect(() => {
     if (check.high) {
       setBusAdd(busStop.filter((busStation) => busStation.lastNode >= 36));
@@ -68,22 +97,64 @@ const Markers = () => {
     }
   }, [check.high, busStop]);
 
-  return (
-    <>
-      {busStops.map((stopData, index) => (
-        <Marker
-          key={index}
-          position={stopData.busPoint}
-          onClick={() => {
-            setBusStopData(stopData);
-          }}
-        />
-      ))}
-      {nodeData.map((data, index) => (
-        <Marker key={index} position={{ lat: data.lat, lng: data.lng }} />
-      ))}
-    </>
-  );
+  // 벡터 소스에 마커 추가
+  useEffect(() => {
+    if (!vectorSource) return;
+
+    vectorSource.clear(); // 기존 마커 초기화
+
+    // 버스 정류장 마커 추가
+    busStops.forEach((stopData) => {
+      const feature = createMarkerFeature(
+        stopData.busPoint.lat,
+        stopData.busPoint.lng
+      );
+      feature.setId(stopData.busStopId); // ID 설정
+      vectorSource.addFeature(feature);
+    });
+
+    // 노드 데이터 마커 추가
+    nodeData.forEach((node) => {
+      const feature = createMarkerFeature(node.lat, node.lng);
+      vectorSource.addFeature(feature);
+    });
+  }, [vectorSource, busStops, nodeData]);
+
+  useEffect(() => {
+    if (!map || !vectorSource) return;
+    console.log("클릭");
+
+    const handleMapClick = (event) => {
+      // 클릭된 픽셀에서 Feature 탐색
+      const clickedFeature = map.forEachFeatureAtPixel(
+        event.pixel,
+        (feature) => feature
+      );
+      console.log(clickedFeature);
+
+      if (clickedFeature) {
+        const featureId = clickedFeature.get("id"); // Feature의 ID 가져오기
+        const stopData = busStops.find(
+          (busStation) => busStation.busStopId === featureId
+        );
+
+        if (stopData) {
+          setBusStopData(stopData); // 상태 업데이트
+          console.log("클릭한 버스 정류장:", stopData);
+        }
+      } else {
+        console.log("클릭한 위치에 Feature가 없습니다.");
+      }
+    };
+
+    map.on("singleclick", handleMapClick);
+
+    // 클린업 함수로 이벤트 제거
+    return () => {
+      map.un("singleclick", handleMapClick);
+    };
+  }, [map, vectorSource, busStops]);
+  return null; // OpenLayers 마커는 UI 요소가 없으므로 렌더링하지 않음
 };
 
-export default Markers;
+export default MarkersOL;
