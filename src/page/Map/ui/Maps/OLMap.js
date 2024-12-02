@@ -7,8 +7,8 @@ import VectorLayer from "ol/layer/Vector";
 import { transform, toLonLat } from "ol/proj";
 import { Map as OLMap, View as OLView } from "ol";
 import TileLayer from "ol/layer/Tile";
-import BusMarkersOL from "../Bus/BusMarkersOL";
-import BusMarkerTestOL from "../Bus/BusMarkersOLTest";
+import BusMarkersOL from "../Bus/BusMarkerOL/BusMarkerOL";
+import BusMarkerTestOL from "../Bus/TestBusMarkerOL/BusMarkersTestOL";
 import { OSM } from "ol/source";
 
 import DirectionLine from "../DirectionLine/DirectionLine";

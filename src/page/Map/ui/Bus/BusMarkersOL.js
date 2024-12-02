@@ -4,7 +4,7 @@ import VectorLayer from "ol/layer/Vector";
 import { useParams } from "react-router-dom";
 import useBusData from "../../../../entities/Bus/useBusData";
 import useBus from "../../model/useBus";
-import createBusFeature from "./CreateBusFeature";
+import createBusFeature from "./Util/CreateBusFeature";
 
 const BusMarkersOL = ({ mapInstance, vectorSource }) => {
   const [bus, setBus, resetBusData, moveBusEvent] = useBus();
