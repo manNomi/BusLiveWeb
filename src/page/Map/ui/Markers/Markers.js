@@ -132,8 +132,6 @@ const MarkersOL = ({ map, vectorSource }) => {
         event.pixel,
         (feature) => feature
       );
-      console.log(clickedFeature);
-
       if (clickedFeature) {
         const featureId = clickedFeature.id_; // Feature의 ID 가져오기
         const stopData = busStops.find(

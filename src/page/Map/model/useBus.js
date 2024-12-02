@@ -9,31 +9,6 @@ const useBus = () => {
   const [bus, setBus] = useState([]);
   const intervalRef = useRef(null);
 
-  // 버스 데이터 설정
-  const setBusAdd = useCallback((data) => {
-    if (!Array.isArray(data)) {
-      console.warn("Invalid bus data:", data);
-      return;
-    }
-
-    const initializedBus = data.map((busLocation) => {
-      const nextNode = getNextNode(busLocation);
-      const angle = nextNode
-        ? calculateAngle(
-            { lat: busLocation.lat, lng: busLocation.lng },
-            { lat: nextNode.lat, lng: nextNode.lng }
-          )
-        : 0;
-
-      return {
-        ...busLocation,
-        angle, // 각도 포함
-      };
-    });
-
-    setBus(initializedBus);
-  }, []);
-
   // 버스 데이터 리셋
   const resetBusData = useCallback(() => {
     console.log("Resetting bus data...");
@@ -85,7 +60,7 @@ const useBus = () => {
               ...busLocation,
               lat: nextNode.lat,
               lng: nextNode.lng,
-              lastNode: nextNode.lastNode,
+              lastNode: busLocation.lastNode,
               angle: nextAngle, // 각도 업데이트
             };
           }
@@ -115,7 +90,7 @@ const useBus = () => {
     return () => clearIntervalIfActive();
   }, [clearIntervalIfActive]);
 
-  return [bus, setBusAdd, resetBusData, moveBusEvent];
+  return [bus, setBus, resetBusData, moveBusEvent];
 };
 
 // 다음 노드 반환

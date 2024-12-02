@@ -1,57 +1,17 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import VectorLayer from "ol/layer/Vector";
-import VectorSource from "ol/source/Vector";
-import { Feature } from "ol";
-import Point from "ol/geom/Point";
-import { Icon, Style as OLStyle } from "ol/style";
-import { transform } from "ol/proj";
-import BusMoveIcon from "../../assets/BusMoveIcon";
+
 import { useParams } from "react-router-dom";
-import ReactDOMServer from "react-dom/server";
 import useBusData from "../../../../entities/Bus/useBusData";
 import useBus from "../../model/useBus";
+import createBusFeature from "./CreateBusFeature";
 
 const BusMarkersOL = ({ mapInstance, vectorSource }) => {
   const [bus, setBus, resetBusData, moveBusEvent] = useBus();
   const [busData, loading, error] = useBusData();
   const { id: busStopId } = useParams();
+  const [isBusDataUpdated, setIsBusDataUpdated] = useState(false);
 
-  // Reusable function to handle angle adjustments and icon styles
-  const createBusFeature = (lat, lng, angle, scale = 0.1, color = 3) => {
-    const normalizedAngle = angle < 0 ? angle + 2 * Math.PI : angle;
-    const isFlipped = normalizedAngle > Math.PI / 2;
-    const adjustedAngle = isFlipped ? angle - Math.PI : angle;
-
-    const svgString = ReactDOMServer.renderToString(
-      <BusMoveIcon width="300" height="300" color={color} />
-    );
-    const busIcon = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
-      svgString
-    )}`;
-
-    const feature = new Feature({
-      geometry: new Point(transform([lng, lat], "EPSG:4326", "EPSG:3857")),
-    });
-
-    // 스타일 생성
-    const style = new OLStyle({
-      image: new Icon({
-        src: busIcon,
-        anchor: [0.5, 0.5],
-        anchorXUnits: "fraction",
-        anchorYUnits: "fraction",
-        rotation: adjustedAngle || 0,
-        scale: isFlipped ? [-scale, scale] : [scale, scale],
-      }),
-    });
-
-    // 스타일을 feature에 설정
-    feature.setStyle(style);
-
-    return feature;
-  };
-
-  // Map initialization
   useEffect(() => {
     if (!mapInstance || !vectorSource) return;
 
@@ -66,10 +26,10 @@ const BusMarkersOL = ({ mapInstance, vectorSource }) => {
   // Update markers
   const updateMarkers = useCallback(() => {
     if (!bus?.length || !vectorSource) return;
-
     vectorSource.clear();
     bus.forEach(({ lat, lng, angle }) => {
       const feature = createBusFeature(lat, lng, angle);
+      feature.setId(angle);
       vectorSource.addFeature(feature);
     });
   }, [bus, vectorSource]);
@@ -94,8 +54,8 @@ const BusMarkersOL = ({ mapInstance, vectorSource }) => {
         closestBus.lat,
         closestBus.lng,
         closestBus.angle,
-        1,
-        1
+        0.2,
+        0.2
       );
       vectorSource.addFeature(feature);
     } else {
@@ -104,16 +64,63 @@ const BusMarkersOL = ({ mapInstance, vectorSource }) => {
   }, [closestBus, vectorSource, updateMarkers]);
 
   useEffect(() => {
-    console.log(busData);
-    if (busData?.data?.length > 0) {
-      setBus(busData.data);
+    console.log(busData.data);
+    setIsBusDataUpdated(false); // 데이터 업데이트가 시작될 때 false로 초기화
+    if (busData && busData.data) {
+      setBus((prevBus) => {
+        // 처음으로 데이터를 불러올 때 처리
+        if (prevBus.length === 0) {
+          setIsBusDataUpdated(true); // 데이터 업데이트 완료 표시
+          return busData.data; // 처음 데이터는 그대로 저장
+        }
+
+        // 데이터가 업데이트되었는지 확인하는 플래그
+        let isUpdated = false;
+
+        // 이전 버스 상태를 새로운 데이터로 업데이트
+        const updatedBus = prevBus.map((busLocation, index) => {
+          const newBusData = busData.data[index];
+
+          // 데이터가 없을 경우 기존 상태 반환
+          if (!newBusData) {
+            return busLocation;
+          }
+
+          const prevLastNode = parseInt(busLocation.lastNode);
+          const newLastNode = parseInt(newBusData.lastNode);
+
+          console.log(prevLastNode, newLastNode);
+          // 노드가 변경되었을 때만 업데이트
+          if (prevLastNode !== newLastNode) {
+            isUpdated = true; // 업데이트 감지
+            return {
+              ...busLocation,
+              lat: newBusData.lat,
+              lng: newBusData.lng,
+              lastNode: newBusData.lastNode, // 새로운 노드 정보로 업데이트
+            };
+          }
+
+          // 노드 변경이 없으면 기존 상태 유지
+          return busLocation;
+        });
+
+        // 업데이트가 발생했을 경우에만 플래그 설정
+        if (isUpdated) {
+          setIsBusDataUpdated(true); // 데이터 업데이트 완료 표시
+        }
+
+        return updatedBus;
+      });
     }
-  }, [busData, setBus, resetBusData]);
+  }, [busData]);
 
   useEffect(() => {
-    const stopMoving = moveBusEvent();
-    return () => stopMoving();
-  }, [moveBusEvent]);
+    if (isBusDataUpdated) {
+      moveBusEvent(); // 버스 좌표 주기적으로 업데이트
+      setIsBusDataUpdated(false); // 상태 초기화 (필요에 따라)
+    }
+  }, [isBusDataUpdated]);
 
   useEffect(() => {
     if (error) {
