@@ -1,5 +1,5 @@
 import React from "react";
-import useBusMarkersLogic from "./useBusMarkersLogic";
+import useBusMarkersLogic from "./useBusMarkerLogic";
 
 const BusMarkersOL = ({ mapInstance, vectorSource }) => {
   const { loading, error } = useBusMarkersLogic(mapInstance, vectorSource);

@@ -1,8 +1,8 @@
 import { useEffect, useCallback, useState } from "react";
-import { initializeVectorLayer } from "./vectorLayerUtils";
-import { updateMarkers, addClosestBusMarker } from "./markerUtils";
-import useBusData from "../../../../entities/Bus/useBusData";
-import useBus from "../../model/useBus";
+import { initializeVectorLayer } from "../Util/vectorLayoutUtil";
+import { updateMarkers, addClosestBusMarker } from "../Util/markerUtil";
+import useBusData from "../../../../../entities/Bus/useBusData";
+import useBus from "../../../model/useBus";
 
 const useBusMarkersLogic = (mapInstance, vectorSource) => {
   const [bus, setBus, resetBusData, moveBusEvent] = useBus();

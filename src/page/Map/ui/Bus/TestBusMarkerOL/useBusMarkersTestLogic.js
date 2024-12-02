@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from "react";
 import { initializeVectorLayer } from "../Util/vectorLayoutUtil";
-import { updateMarkers, addClosestBusMarker } from "..Util/markerUtils";
-import createBusFeature from "./createBusFeature";
+import { updateMarkers, addClosestBusMarker } from "../Util/markerUtil";
+import createBusFeature from "../Util/CreateBusFeature";
 
 const useBusMarkersTestLogic = (
   mapInstance,
