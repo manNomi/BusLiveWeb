@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { NaverMap, Container as MapDiv } from "react-naver-maps";
+
+
 import Style from "./style";
 import { useMapOptions } from "../../model/useMapOption";
 import Markers from "../Markers/Markers";
@@ -18,6 +19,7 @@ import DirectionsModal from "../Direction/Direction";
 import DirectionLine from "../DirectionLine/DirectionLine";
 import useRouteData from "../../../../shared/recoil/useBusRoute";
 import MouseWheelZoom from "ol/interaction/MouseWheelZoom";
+import useMapAPI from "../../../../shared/recoil/useMap";
 
 const OLMapComponent = ({ center, zoom, onMapChange }) => {
   const [olMapRef, setOlMapRef] = useState(null);
@@ -93,11 +95,11 @@ const OLMapComponent = ({ center, zoom, onMapChange }) => {
 
         view.animate({
           zoom: newZoom,
-          duration: 300, // 부드러운 애니메이션
+          duration: 150, // 부드러운 애니메이션
         });
 
         accumulatedDelta = 0; // 누적 스크롤 초기화
-      }, 100); // 100ms 디바운스
+      }, 10); // 100ms 디바운스
     };
 
     // 중심 이동 감지
@@ -161,13 +163,13 @@ const MyNaverMap = () => {
   const [option, setOptionEvent] = useMapOptions();
   const [center, setCenter] = useState({ lat: 37.450284, lng: 126.653478 });
   const [zoom, setZoom] = useState(13);
+  const [map] = useMapAPI();
+
   const naverMapRef = useRef(null);
   const [check, setCheck] = useCheckAtom();
-
   const handleOLMapChange = (newCenter, newZoom) => {
     setCenter(newCenter);
     setZoom(newZoom);
-
     if (naverMapRef.current) {
       naverMapRef.current.setCenter(newCenter);
       naverMapRef.current.setZoom(newZoom);
@@ -178,35 +180,16 @@ const MyNaverMap = () => {
     <>
       <Aside />
       <Style.Container>
-        <MapDiv style={{ width: "100%", height: "90vh", position: "relative" }}>
-          <NaverMap
-            ref={naverMapRef}
-            center={center}
-            zoom={zoom}
-            style={{ width: "100%", height: "100%" }}
-          />
-          <div
-            id="ol-map"
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              zIndex: 1,
-            }}>
-            <OLMapComponent
-              center={center}
-              zoom={zoom}
-              onMapChange={handleOLMapChange}
-            />
-          </div>
-        </MapDiv>
-        <DirectionsModal
-          isOpen={check.direction && check.route}
-          onClose={() => setCheck("both_click")}
-        />
+        {map === "Naver" ? (
+          
+        ) : (
+          <div></div>
+        )}
       </Style.Container>
+      <DirectionsModal
+        isOpen={check.direction && check.route}
+        onClose={() => setCheck("both_click")}
+      />
       <Advertise />
     </>
   );

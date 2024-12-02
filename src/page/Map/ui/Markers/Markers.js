@@ -54,11 +54,13 @@ const MarkersOL = ({ map, vectorSource }) => {
 
   // 버스 정류장 클릭 이벤트 처리
   useEffect(() => {
+    console.log(busStopData);
     if (!busStopData) return;
     setBusID(busStopData.busStopId);
   }, [busStopData]);
 
   useEffect(() => {
+    console.log(retroBusStopData);
     if (retroBusStopData !== "" && retroBusStopData) {
       handleMarkerClick(
         busStopData,
@@ -133,14 +135,14 @@ const MarkersOL = ({ map, vectorSource }) => {
       console.log(clickedFeature);
 
       if (clickedFeature) {
-        const featureId = clickedFeature.get("id"); // Feature의 ID 가져오기
+        const featureId = clickedFeature.id_; // Feature의 ID 가져오기
         const stopData = busStops.find(
           (busStation) => busStation.busStopId === featureId
         );
 
         if (stopData) {
-          setBusStopData(stopData); // 상태 업데이트
           console.log("클릭한 버스 정류장:", stopData);
+          setBusStopData(stopData); // 상태 업데이트
         }
       } else {
         console.log("클릭한 위치에 Feature가 없습니다.");

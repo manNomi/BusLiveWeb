@@ -1,14 +1,14 @@
 import MinusIcon from "../../asset/minus_icon";
 import PlusIcon from "../../asset/plus_icon";
 import CheckBox from "../CheckBox/CheckBox";
-import SearchContainer from "../search_container/SearchContainer";
 import HoverIcon from "../hover_icon/HoverIcon";
-import Style from "./style";
 import useCheckAtom from "../../../../../../shared/recoil/useCheckAtom";
 import useAside from "../../model/useAside";
 import { useNavigate } from "react-router-dom";
 import TextBox from "../TextBox/CheckBox";
 import Explain from "../explain/explain";
+import { Asides, Button } from "./style";
+import ButtonGroup from "../ArrowBtn/ArrowButtons";
 
 const Aside = () => {
   const [asideOpen, setAsideOpen] = useAside();
@@ -17,13 +17,13 @@ const Aside = () => {
 
   return (
     <>
-      <Style.Aside>
-        <Style.Button>
+      <Asides>
+        <Button>
           <HoverIcon
             onClick={setAsideOpen}
             resource={asideOpen ? MinusIcon : PlusIcon}
           />
-        </Style.Button>
+        </Button>
         {asideOpen && (
           <div>
             {/* <CheckBox
@@ -67,9 +67,10 @@ const Aside = () => {
                 setCheck("both_click");
               }}
             />
+            <ButtonGroup />
           </div>
         )}
-      </Style.Aside>
+      </Asides>
       <Explain />
       {/* <SearchContainer /> */}
     </>
