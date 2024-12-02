@@ -9,13 +9,15 @@ import Advertise from "../Advertise";
 import useMapAPI from "../../../../shared/recoil/useMap";
 import NaverMapDiv from "./NaverMap";
 import GoogleMap from "./GoogleMap";
+import OLMapComponent from "./OLMap";
+import KakaoMapDiv from "./KakaoMap";
+import DefalutMap from "./DefaultMap";
 
-const MyNaverMap = () => {
+const Maps = () => {
   const [option, setOptionEvent] = useMapOptions();
   const [center, setCenter] = useState({ lat: 37.450284, lng: 126.653478 });
   const [zoom, setZoom] = useState(13);
   const [map] = useMapAPI();
-
   const [check, setCheck] = useCheckAtom();
 
   return (
@@ -38,8 +40,22 @@ const MyNaverMap = () => {
             setZoom={setZoom}
           />
         )}
-        {map === "Kakao" && <NaverMapDiv />}
-        {map === "Defalut" && <NaverMapDiv />}
+        {map === "Kakao" && (
+          <KakaoMapDiv
+            center={center}
+            zoom={zoom}
+            setCenter={setCenter}
+            setZoom={setZoom}
+          />
+        )}
+        {map === "Default" && (
+          <DefalutMap
+            center={center}
+            zoom={zoom}
+            setCenter={setCenter}
+            setZoom={setZoom}
+          />
+        )}
       </Style.Container>
       <DirectionsModal
         isOpen={check.direction && check.route}
@@ -50,4 +66,4 @@ const MyNaverMap = () => {
   );
 };
 
-export default MyNaverMap;
+export default Maps;

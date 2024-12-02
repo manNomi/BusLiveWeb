@@ -19,7 +19,7 @@ import useMapAPI from "../../../../shared/recoil/useMap";
 import { useEffect, useState } from "react";
 import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
 
-const OLMapComponent = ({ center, zoom, onMapChange }) => {
+const OLMapComponent = ({ center, zoom, onMapChange, opacity = 0 }) => {
   const [olMapRef, setOlMapRef] = useState(null);
   const [vectorSource, setVectorSource] = useState(null);
   const [sourceLine, setLineSource] = useState(null);
@@ -40,7 +40,7 @@ const OLMapComponent = ({ center, zoom, onMapChange }) => {
         new VectorLayer({ source: newLineSource }), // 라인 소스
         new TileLayer({
           source: new OSM(),
-          opacity: 0,
+          opacity: opacity,
         }),
       ],
       view: new OLView({

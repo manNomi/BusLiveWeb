@@ -9,9 +9,10 @@ import useMapAPI from "../../../../../../shared/recoil/useMap";
 
 const ButtonGroup = () => {
   const [map, setMap] = useMapAPI();
-  const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState("right");
   const buttons = ["Naver", "Google", "Kakao", "Default"];
+  const [activeIndex, setActiveIndex] = useState(buttons.indexOf(map));
+
   const handlePrev = () => {
     setDirection("left");
     setActiveIndex((prevIndex) =>
