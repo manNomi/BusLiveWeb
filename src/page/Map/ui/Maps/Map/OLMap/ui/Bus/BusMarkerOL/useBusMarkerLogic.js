@@ -11,41 +11,28 @@ const useBusMarkersLogic = (mapInstance, vectorSource) => {
   const [busData, loading, error] = useBusData();
   const [isBusDataUpdated, setIsBusDataUpdated] = useState(false);
 
-  useEffect(
-    () => initializeVectorLayer(mapInstance, vectorSource),
-    [mapInstance, vectorSource]
-  );
+  useEffect(() => {
+    initializeVectorLayer(mapInstance, vectorSource);
+  }, [mapInstance, vectorSource]);
 
   const getClosestBus = useCallback(() => {
     if (!bus?.length || !busData?.busStopId) return null;
 
-    const candidates = bus.filter(
-      (item) => item.lastNode < parseInt(busData.busStopId, 10)
-    );
-    candidates.sort((a, b) => b.lastNode - a.lastNode);
-    return candidates[0] || null;
+    const busStopId = parseInt(busData.busStopId, 10);
+    if (isNaN(busStopId)) return null; // busStopId 유효성 검사
+
+    const candidates = bus.filter((item) => {
+      const lastNode = parseInt(item.lastNode, 10);
+      return !isNaN(lastNode) && lastNode < busStopId;
+    });
+
+    if (candidates.length === 0) return null;
+
+    // 내림차순 정렬 후 가장 큰 lastNode를 가진 항목 반환
+    return candidates.sort((a, b) => b.lastNode - a.lastNode)[0];
   }, [bus, busData]);
 
   const closestBus = getClosestBus();
-
-  useEffect(() => {
-    if (closestBus) {
-      addClosestBusMarker(closestBus, vectorSource);
-    } else {
-      updateMarkers(bus, vectorSource);
-    }
-  }, [closestBus, bus, vectorSource]);
-
-  const busStopId = useParams("id").id;
-  // busStopId가 있을 때 가장 가까운 버스 정류장 선택
-  const setBusOnly = (bus) => {
-    const candidates = bus.filter(
-      (item) => item.lastNode < parseInt(busStopId)
-    );
-    candidates.sort((a, b) => b.lastNode - a.lastNode); // 내림차순 정렬
-    return candidates[0]; // 가장 큰 lastNode를 가진 항목 반환
-  };
-  const closestBusLocation = busStopId ? setBusOnly(bus) : null;
 
   useEffect(() => {
     if (closestBus) {
@@ -55,13 +42,13 @@ const useBusMarkersLogic = (mapInstance, vectorSource) => {
         closestBus.lng,
         closestBus.angle,
         0.2,
-        0.2
+        3 // 색상 코드로 예시
       );
-      vectorSource.addFeature(feature);
+      vectorSource.addFeature(feature); // 가장 가까운 버스 마커 추가
     } else {
-      updateMarkers();
+      updateMarkers(bus, vectorSource); // 모든 버스 마커 추가
     }
-  }, [closestBus, vectorSource, updateMarkers]);
+  }, [closestBus, bus, vectorSource]);
 
   useEffect(() => {
     if (busData?.data) {
@@ -80,14 +67,14 @@ const useBusMarkersLogic = (mapInstance, vectorSource) => {
         return updatedBus;
       });
     }
-  }, [busData]);
+  }, [busData, setBus]);
 
   useEffect(() => {
     if (isBusDataUpdated) {
-      moveBusEvent();
+      moveBusEvent(); // 버스 이동 이벤트
       setIsBusDataUpdated(false);
     }
-  }, [isBusDataUpdated]);
+  }, [isBusDataUpdated, moveBusEvent]);
 
   return { loading, error };
 };
