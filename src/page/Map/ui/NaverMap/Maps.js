@@ -4,11 +4,11 @@ import Style from "./style";
 import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
 import DirectionsModal from "../Direction/Direction";
 import { useMapOptions } from "../../model/useMapOption";
-import Markers from "../Markers/Markers";
 import Aside from "../aside";
 import Advertise from "../Advertise";
 import useMapAPI from "../../../../shared/recoil/useMap";
 import NaverMapDiv from "./NaverMap";
+import GoogleMap from "./GoogleMap";
 
 const MyNaverMap = () => {
   const [option, setOptionEvent] = useMapOptions();
@@ -30,7 +30,14 @@ const MyNaverMap = () => {
             setZoom={setZoom}
           />
         )}
-        {map === "Google" && <NaverMapDiv />}
+        {map === "Google" && (
+          <GoogleMap
+            center={center}
+            zoom={zoom}
+            setCenter={setCenter}
+            setZoom={setZoom}
+          />
+        )}
         {map === "Kakao" && <NaverMapDiv />}
         {map === "Defalut" && <NaverMapDiv />}
       </Style.Container>

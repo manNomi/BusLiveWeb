@@ -1,29 +1,61 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
+import { GoogleMap, LoadScript } from "@react-google-maps/api";
+import OLMapComponent from "./OLMap";
 
-const GoogleMap = () => {
-  const mapRef = useRef(null);
+const GoogleMapDiv = ({ center, zoom, setCenter, setZoom }) => {
+  const googleMapRef = useRef(null);
 
-  useEffect(() => {
-    // Google Maps Script 로드
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap`;
-    script.async = true;
-    document.body.appendChild(script);
+  // OpenLayers 같은 커스텀 맵 동기화 핸들러
+  const handleOLMapChange = (newCenter, newZoom) => {
+    setCenter(newCenter);
+    setZoom(newZoom);
 
-    // 콜백 함수로 Google Maps 초기화
-    window.initMap = () => {
-      new window.google.maps.Map(mapRef.current, {
-        center: { lat: 37.5665, lng: 126.978 }, // 서울 중심 좌표
-        zoom: 12,
-      });
-    };
+    if (googleMapRef.current) {
+      googleMapRef.current.panTo(newCenter);
+      googleMapRef.current.setZoom(newZoom);
+    }
+  };
 
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
+  const mapContainerStyle = {
+    width: "100%",
+    height: "90vh",
+    position: "relative",
+  };
 
-  return <div ref={mapRef} style={{ width: "100%", height: "500px" }} />;
+  return (
+    <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+      <div style={mapContainerStyle}>
+        {/* Google Map */}
+        <GoogleMap
+          ref={googleMapRef}
+          center={center}
+          zoom={zoom}
+          mapContainerStyle={{ width: "100%", height: "100%" }}
+          onLoad={(map) => {
+            googleMapRef.current = map;
+          }}
+        />
+
+        {/* OpenLayers와 겹치는 영역 */}
+        <div
+          id="ol-map"
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: 1,
+          }}>
+          <OLMapComponent
+            center={center}
+            zoom={zoom}
+            onMapChange={handleOLMapChange}
+          />
+        </div>
+      </div>
+    </LoadScript>
+  );
 };
 
-export default GoogleMap;
+export default GoogleMapDiv;
