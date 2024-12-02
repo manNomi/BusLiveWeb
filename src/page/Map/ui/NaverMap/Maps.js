@@ -1,20 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
-
+import React, { useState } from "react";
 import Style from "./style";
 import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
 import DirectionsModal from "../Direction/Direction";
-import { useMapOptions } from "../../model/useMapOption";
 import Aside from "../aside";
 import Advertise from "../Advertise";
 import useMapAPI from "../../../../shared/recoil/useMap";
 import NaverMapDiv from "./NaverMap";
 import GoogleMap from "./GoogleMap";
-import OLMapComponent from "./OLMap";
 import KakaoMapDiv from "./KakaoMap";
 import DefalutMap from "./DefaultMap";
 
 const Maps = () => {
-  const [option, setOptionEvent] = useMapOptions();
   const [center, setCenter] = useState({ lat: 37.450284, lng: 126.653478 });
   const [zoom, setZoom] = useState(13);
   const [map] = useMapAPI();
