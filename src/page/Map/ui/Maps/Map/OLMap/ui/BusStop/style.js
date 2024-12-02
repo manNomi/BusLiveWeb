@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import chat from "../../assets/chat_icon.svg";
+import chat from "../../../../../../assets/chat_icon.svg";
 
 export default {
   Container: styled.div`

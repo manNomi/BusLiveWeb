@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import Style from "./style";
 import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
-import DirectionsModal from "../Direction/Direction";
 import Aside from "../aside";
 import Advertise from "../Advertise";
 import useMapAPI from "../../../../shared/recoil/useMap";
-import NaverMapDiv from "./NaverMap";
-import GoogleMap from "./GoogleMap";
-import KakaoMapDiv from "./KakaoMap";
-import DefalutMap from "./DefaultMap";
+import DirectionsModal from "./Map/OLMap/ui/Direction";
+
+import NaverMapDiv from "./Map/AnotherMap/NaverMap";
+import GoogleMap from "./Map/AnotherMap/GoogleMap";
+import KakaoMapDiv from "./Map/AnotherMap/KakaoMap";
+import DefalutMap from "./Map/AnotherMap/DefaultMap";
 
 const Maps = () => {
   const [center, setCenter] = useState({ lat: 37.450284, lng: 126.653478 });
@@ -54,7 +55,7 @@ const Maps = () => {
         )}
       </Style.Container>
       <DirectionsModal
-        isOpen={check.direction && check.route}
+        isOpend={check.direction && check.route}
         onClose={() => setCheck("both_click")}
       />
       <Advertise />

@@ -1,7 +1,7 @@
 import React from "react";
 import useBusMarkersTestLogic from "./useBusMarkersTestLogic";
-import useTestBus from "../../../model/useTestBus";
-import useTestBusData from "../../../../../entities/Bus/useTestBusData";
+import useTestBus from "../../../../../../../model/useTestBus";
+import useTestBusData from "../../../../../../../../../entities/Bus/useTestBusData";
 import { useParams } from "react-router-dom";
 
 const BusMarkersTestOL = ({ mapInstance, vectorSource }) => {

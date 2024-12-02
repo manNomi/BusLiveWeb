@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import OLMapComponent from "./OLMap";
+import OLMapComponent from "../OLMap";
 
 const KakaoMapDiv = ({ center, zoom, setCenter, setZoom }) => {
   const mapRef = useRef(null);
@@ -54,7 +54,6 @@ const KakaoMapDiv = ({ center, zoom, setCenter, setZoom }) => {
     if (mapRef.current) {
       const map = mapRef.current;
       map.setCenter(new window.kakao.maps.LatLng(center.lat, center.lng));
-      console.log(zoomToLevel(zoom));
       map.setLevel(zoomToLevel(zoom)); // Zoom 값을 Kakao Level로 변환
     }
   }, [center, zoom]);
@@ -69,26 +68,14 @@ const KakaoMapDiv = ({ center, zoom, setCenter, setZoom }) => {
           height: "100%",
         }}></div>
 
-      {/* OpenLayers 맵 컨테이너 */}
-      <div
-        id="ol-map"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          zIndex: 1,
-        }}>
-        <OLMapComponent
-          center={center}
-          zoom={zoom}
-          onMapChange={(newCenter, newZoom) => {
-            setCenter(newCenter);
-            setZoom(newZoom);
-          }}
-        />
-      </div>
+      <OLMapComponent
+        center={center}
+        zoom={zoom}
+        onMapChange={(newCenter, newZoom) => {
+          setCenter(newCenter);
+          setZoom(newZoom);
+        }}
+      />
     </div>
   );
 };

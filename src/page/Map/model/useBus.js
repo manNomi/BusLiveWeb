@@ -11,7 +11,6 @@ const useBus = () => {
 
   // 버스 데이터 리셋
   const resetBusData = useCallback(() => {
-    console.log("Resetting bus data...");
     setBus([]);
     clearIntervalIfActive();
   }, []);
@@ -21,7 +20,6 @@ const useBus = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
-      console.log("Interval cleared");
     }
   }, []);
 
@@ -84,8 +82,6 @@ const useBus = () => {
         })
       );
     }, FRAME_RATE);
-
-    console.log("Move event started");
 
     return () => clearIntervalIfActive();
   }, [clearIntervalIfActive]);

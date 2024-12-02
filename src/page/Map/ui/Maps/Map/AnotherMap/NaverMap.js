@@ -1,6 +1,6 @@
 import { NaverMap, Container as MapDiv } from "react-naver-maps";
 import { NavermapsProvider } from "react-naver-maps";
-import OLMapComponent from "./OLMap";
+import OLMapComponent from "../OLMap";
 import { useRef } from "react";
 
 const NaverMapDiv = ({ center, zoom, setCenter, setZoom }) => {
@@ -22,22 +22,11 @@ const NaverMapDiv = ({ center, zoom, setCenter, setZoom }) => {
           zoom={zoom}
           style={{ width: "100%", height: "100%" }}
         />
-        <div
-          id="ol-map"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            zIndex: 1,
-          }}>
-          <OLMapComponent
-            center={center}
-            zoom={zoom}
-            onMapChange={handleOLMapChange}
-          />
-        </div>
+        <OLMapComponent
+          center={center}
+          zoom={zoom}
+          onMapChange={handleOLMapChange}
+        />
       </MapDiv>
     </NavermapsProvider>
   );

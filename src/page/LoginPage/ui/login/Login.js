@@ -16,7 +16,6 @@ const LoginPage = () => {
     if (window.Kakao) {
       window.Kakao.Auth.login({
         success: (authObj) => {
-          console.log("로그인 성공", authObj);
           // 로그인 성공 후 페이지 이동
           navigate("/home"); // 로그인 성공 후 이동할 페이지 경로
         },

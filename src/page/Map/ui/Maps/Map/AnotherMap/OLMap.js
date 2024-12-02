@@ -1,23 +1,18 @@
-import { useMapOptions } from "../../model/useMapOption";
-import Markers from "../Markers/Markers";
-import Aside from "../aside";
-import Advertise from "../Advertise";
+import { useEffect, useState } from "react";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
 import { transform, toLonLat } from "ol/proj";
 import { Map as OLMap, View as OLView } from "ol";
 import TileLayer from "ol/layer/Tile";
-import BusMarkersOL from "../Bus/BusMarkerOL/BusMarkerOL";
-import BusMarkerTestOL from "../Bus/TestBusMarkerOL/BusMarkersTestOL";
+import MouseWheelZoom from "ol/interaction/MouseWheelZoom";
 import { OSM } from "ol/source";
 
-import DirectionLine from "../DirectionLine/DirectionLine";
-import useRouteData from "../../../../shared/recoil/useBusRoute";
-import MouseWheelZoom from "ol/interaction/MouseWheelZoom";
-import useMapAPI from "../../../../shared/recoil/useMap";
-
-import { useEffect, useState } from "react";
-import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
+import DirectionLine from "../OLMap/ui/DirectionLine";
+import useRouteData from "../../../../../../shared/recoil/useBusRoute";
+import BusMarkersOL from "../../Bus/BusMarkerOL/BusMarkerOL";
+import BusMarkerTestOL from "../../Bus/TestBusMarkerOL/BusMarkersTestOL";
+import Markers from "../../Markers";
+import useCheckAtom from "../../../../../../shared/recoil/useCheckAtom";
 
 const OLMapComponent = ({ center, zoom, onMapChange, opacity = 0 }) => {
   const [olMapRef, setOlMapRef] = useState(null);
@@ -34,10 +29,10 @@ const OLMapComponent = ({ center, zoom, onMapChange, opacity = 0 }) => {
     const newMarkerSource = new VectorSource({ features: [] });
 
     const newMapInstance = new OLMap({
-      target: "ol-map",
+      target: "ol-map", // ID 변경
       layers: [
-        new VectorLayer({ source: newMarkerSource }), // 마커 소스
-        new VectorLayer({ source: newLineSource }), // 라인 소스
+        new VectorLayer({ source: newMarkerSource }),
+        new VectorLayer({ source: newLineSource }),
         new TileLayer({
           source: new OSM(),
           opacity: opacity,
@@ -60,72 +55,68 @@ const OLMapComponent = ({ center, zoom, onMapChange, opacity = 0 }) => {
     return () => {
       if (newMapInstance) newMapInstance.setTarget(null);
     };
-  }, []);
+  }, [center, zoom, opacity]);
 
   useEffect(() => {
     if (!olMapRef) return;
 
     const view = olMapRef.getView();
     let zoomTimeout = null; // 디바운스 타이머
-    let accumulatedDelta = 0; // 스크롤 양 누적
+    let accumulatedDelta = 0; // 스크롤 누적 양
 
-    // 기본 스크롤 기능 비활성화
+    // 기본 스크롤 비활성화
     olMapRef.getInteractions().forEach((interaction) => {
       if (interaction instanceof MouseWheelZoom) {
         olMapRef.removeInteraction(interaction);
       }
     });
 
-    // 커스텀 스크롤 이벤트로 줌 제어
+    // 커스텀 스크롤 줌 제어
     const handleScrollZoom = (event) => {
-      event.preventDefault(); // 기본 스크롤 동작 방지
+      event.preventDefault();
       accumulatedDelta += event.deltaY;
 
-      // 디바운스 처리
       if (zoomTimeout) clearTimeout(zoomTimeout);
 
       zoomTimeout = setTimeout(() => {
         const currentZoom = view.getZoom();
         const newZoom =
           accumulatedDelta > 0
-            ? Math.floor(currentZoom) - 1 // 줌 아웃
-            : Math.ceil(currentZoom) + 1; // 줌 인
+            ? Math.max(currentZoom - 1, view.getMinZoom())
+            : Math.min(currentZoom + 1, view.getMaxZoom());
 
         view.animate({
           zoom: newZoom,
-          duration: 150, // 부드러운 애니메이션
+          duration: 200,
         });
-
-        accumulatedDelta = 0; // 누적 스크롤 초기화
-      }, 10); // 100ms 디바운스
+        accumulatedDelta = 0;
+      }, 100); // 디바운스 시간 100ms
     };
 
-    // 중심 이동 감지
+    // 중심 변경 감지
     const handleCenterChange = () => {
-      const newCenter = toLonLat(view.getCenter()); // EPSG:4326 좌표 변환
-      const currentZoom = Math.round(view.getZoom()); // 줌을 정수로 처리
-
+      const newCenter = toLonLat(view.getCenter());
+      const currentZoom = Math.round(view.getZoom());
       onMapChange({ lat: newCenter[1], lng: newCenter[0] }, currentZoom);
     };
 
-    // DOM에 스크롤 이벤트 등록
+    // DOM에 이벤트 등록
     const mapElement = document.getElementById("ol-map");
     if (mapElement) {
       mapElement.addEventListener("wheel", handleScrollZoom, {
         passive: false,
-      }); // 스크롤 이벤트
+      });
     }
 
     // OpenLayers 이벤트 등록
-    view.on("change:center", handleCenterChange); // 중심 변경 이벤트
-    view.on("change:resolution", handleCenterChange); // 줌 변경 이벤트
+    view.on("change:center", handleCenterChange);
+    view.on("change:resolution", handleCenterChange);
 
-    // 클린업
     return () => {
       if (mapElement) {
-        mapElement.removeEventListener("wheel", handleScrollZoom); // 이벤트 제거
+        mapElement.removeEventListener("wheel", handleScrollZoom);
       }
-      if (zoomTimeout) clearTimeout(zoomTimeout); // 디바운스 타이머 제거
+      if (zoomTimeout) clearTimeout(zoomTimeout);
       view.un("change:center", handleCenterChange);
       view.un("change:resolution", handleCenterChange);
     };
@@ -133,6 +124,17 @@ const OLMapComponent = ({ center, zoom, onMapChange, opacity = 0 }) => {
 
   return (
     <>
+      <div
+        id="ol-map"
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: 1,
+        }}
+      />
       {olMapRef && vectorSource && (
         <>
           <Markers map={olMapRef} vectorSource={markerSource} />

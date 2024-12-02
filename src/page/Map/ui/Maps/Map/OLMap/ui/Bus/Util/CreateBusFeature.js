@@ -2,7 +2,7 @@ import { Feature } from "ol";
 import Point from "ol/geom/Point";
 import { Icon, Style as OLStyle } from "ol/style";
 import { transform } from "ol/proj";
-import BusMoveIcon from "../../../assets/BusMoveIcon";
+import BusMoveIcon from "../../../../../../../assets/BusMoveIcon";
 import ReactDOMServer from "react-dom/server";
 
 const createBusFeature = (lat, lng, angle, scale = 0.1, color = 3) => {

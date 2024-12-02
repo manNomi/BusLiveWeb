@@ -1,2 +1,2 @@
-import Maps from "./ui/Maps/Maps";
+import Maps from "./ui/Maps";
 export default Maps;

@@ -12,10 +12,10 @@ import {
   TableContainer,
   FooterButtonContainer,
 } from "./style"; // 스타일 추가
-import useDirectionsData from "../../../../entities/Bus/useDirection";
-import { busStop } from "../../../../entities/Bus/BusLocationData";
-import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
-import useRouteData from "../../../../shared/recoil/useBusRoute";
+import useDirectionsData from "../../../../../../../../entities/Bus/useDirection";
+import { busStop } from "../../../../../../../../entities/Bus/BusLocationData";
+import useCheckAtom from "../../../../../../../../shared/recoil/useCheckAtom";
+import useRouteData from "../../../../../../../../shared/recoil/useBusRoute";
 
 const DirectionsModal = ({ isOpen, onClose }) => {
   const [directionsData, setCoordinates, error, loading] = useDirectionsData();

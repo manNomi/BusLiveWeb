@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { GoogleMap, LoadScript } from "@react-google-maps/api";
-import OLMapComponent from "./OLMap";
+import OLMapComponent from "../OLMap";
 
 const GoogleMapDiv = ({ center, zoom, setCenter, setZoom }) => {
   const googleMapRef = useRef(null);
@@ -35,24 +35,11 @@ const GoogleMapDiv = ({ center, zoom, setCenter, setZoom }) => {
             googleMapRef.current = map;
           }}
         />
-
-        {/* OpenLayers와 겹치는 영역 */}
-        <div
-          id="ol-map"
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            zIndex: 1,
-          }}>
-          <OLMapComponent
-            center={center}
-            zoom={zoom}
-            onMapChange={handleOLMapChange}
-          />
-        </div>
+        <OLMapComponent
+          center={center}
+          zoom={zoom}
+          onMapChange={handleOLMapChange}
+        />
       </div>
     </LoadScript>
   );
