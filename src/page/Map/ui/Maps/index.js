@@ -55,7 +55,7 @@ const Maps = () => {
         )}
       </Style.Container>
       <DirectionsModal
-        isOpend={check.direction && check.route}
+        isOpen={check.direction && check.route}
         onClose={() => setCheck("both_click")}
       />
       <Advertise />
