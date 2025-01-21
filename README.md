@@ -36,9 +36,7 @@
     <td align="center">
       <img src="./docs/move_small.gif" alt="Main Page" width="200" style="height: auto;"/>
       <br><b>Move Feature</b>
-
     </td>
-
   </tr>
 </table>
 ---
