@@ -15,26 +15,34 @@
 
 ## 🖼 스크린샷
 
-<table align="center">
+<style>
+  .screenshot-table img {
+    width: 200px; /* 너비 조정 */
+    height: 350px; /* 고정 높이 적용 */
+    object-fit: cover; /* 이미지 비율 유지하면서 크기 맞춤 */
+  }
+</style>
+
+<table class="screenshot-table" align="center">
   <tr>
     <td align="center">
-      <img src="./docs/Login.png" alt="BusLive Login" width="200" style="height: auto;"/>
+      <img src="./docs/Login.png" alt="BusLive Login"/>
       <br><b>Login Page</b>
     </td>
     <td align="center">
-      <img src="./docs/move.gif" alt="BusLive Move" width="200" style="height: auto;"/>
+      <img src="./docs/move.gif" alt="BusLive Move"/>
       <br><b>Main Page</b>
     </td>
     <td align="center">
-      <img src="./docs/chatListPage.png" alt="Chat List" width="200" style="height: auto;"/>
+      <img src="./docs/chatListPage.png" alt="Chat List"/>
       <br><b>Chat List</b>
     </td>
-       <td align="center">
-      <img src="./docs/chatPage.png" alt="Main Page" width="200" style="height: auto;"/>
+    <td align="center">
+      <img src="./docs/chatPage.png" alt="Chat Page"/>
       <br><b>Chat Page</b>
     </td>
     <td align="center">
-      <img src="./docs/move_small.gif" alt="Main Page" width="200" style="height: auto;"/>
+      <img src="./docs/move_small.gif" alt="Move Feature"/>
       <br><b>Move Feature</b>
     </td>
   </tr>
