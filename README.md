@@ -14,6 +14,7 @@
 ---
 
 ## 🖼 스크린샷
+
 <table align="center">
   <tr>
     <td align="center">
@@ -22,16 +23,22 @@
     </td>
     <td align="center">
       <img src="./docs/move.gif" alt="BusLive Move" width="200" style="height: auto;"/>
-      <br><b>Move Feature</b>
+      <br><b>Main Page</b>
     </td>
     <td align="center">
       <img src="./docs/chatListPage.png" alt="Chat List" width="200" style="height: auto;"/>
       <br><b>Chat List</b>
     </td>
-    <td align="center">
-      <img src="./docs/main_img.png" alt="Main Page" width="200" style="height: auto;"/>
-      <br><b>Main Page</b>
+       <td align="center">
+      <img src="./docs/chatPage.png" alt="Main Page" width="200" style="height: auto;"/>
+      <br><b>Chat Page</b>
     </td>
+    <td align="center">
+      <img src="./docs/move_small.gif" alt="Main Page" width="200" style="height: auto;"/>
+      <br><b>Move Feature</b>
+
+    </td>
+
   </tr>
 </table>
 ---
