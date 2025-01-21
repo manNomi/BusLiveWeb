@@ -15,11 +15,22 @@
 
 ## 🖼 스크린샷
 
-![BusLive Login](./docs/Login.png)
-![BusLive Move](./docs/move.gif)
-![BusLive Move](./docs/chatListPage.png)
-![BusLive Move](./docs/main_img.png)
+<!-- 이미지 크기 조절 예제 -->
+<p align="center">
+  <img src="./docs/Login.png" alt="BusLive Login" width="500">
+</p>
 
+<p align="center">
+  <img src="./docs/move.gif" alt="BusLive Move" width="600">
+</p>
+
+<p align="center">
+  <img src="./docs/chatListPage.png" alt="BusLive Chat List Page" width="400">
+</p>
+
+<p align="center">
+  <img src="./docs/main_img.png" alt="BusLive Main Image" width="700">
+</p>
 ---
 
 ## ✨ 주요 기능
