@@ -1,6 +1,6 @@
 import React from "react";
-import STYLE from "./style.js";
-import BlackSearchIcon from "../../asset/search_black.js";
+import STYLE from "./style";
+import BlackSearchIcon from "../../asset/BlackSearchIcon";
 
 const SearchContainer = () => {
   return (
