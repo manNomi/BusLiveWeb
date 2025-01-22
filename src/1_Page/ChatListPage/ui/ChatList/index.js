@@ -17,7 +17,6 @@ const ChatList = (props) => {
           <STYLE.LastMessage>클릭해 지금 바로 참여하기</STYLE.LastMessage>
         </STYLE.ChatContent>
       </STYLE.ChatItem>
-      {/* 여러 개의 ChatItem을 반복 */}
     </STYLE.ChatListContainer>
   );
 };

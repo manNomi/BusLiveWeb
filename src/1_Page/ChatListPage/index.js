@@ -6,7 +6,6 @@ import useGetBusChatList from "./model/useGetBusChatList";
 const ChatListContainer = () => {
   const pageChange = useNavigate();
   const { busChatList } = useGetBusChatList();
-  console.log(busChatList);
   return (
     <STYLE.Container>
       <STYLE.Header>
