@@ -1,21 +1,11 @@
-import { useCallback, useState, useRef } from "react";
-import { nodeLocation } from "../../../../../3_Entities/Bus/busLocationData";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+const useManageBusData = (busData) => {
+  const [disPlayBusPoint, setDisPlayBusPoint] = useState([]);
+  const [isBusDataUpdated, setIsBusDataUpdated] = useState(false);
+  const { id: busStopId } = useParams();
 
-const useBusMove = (setBus) => {
   const intervalRef = useRef(null);
-
-  const setBusAdd = (data) => {
-    setBus(data);
-  };
-
-  const resetBusData = () => {
-    setBus([]);
-    // 리셋 시 interval 정리
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  };
 
   const moveBusEvent = useCallback(() => {
     const speed = 5; // 고정된 속도 (m/s)
@@ -24,7 +14,7 @@ const useBusMove = (setBus) => {
     if (intervalRef.current) return;
 
     intervalRef.current = setInterval(() => {
-      setBus((prevBus) =>
+      setDisPlayBusPoint((prevBus) =>
         prevBus.map((busLocation) => {
           const nextNode = nodeLocation.find(
             (node) => node.lastNode === parseInt(busLocation.lastNode) + 1
@@ -75,13 +65,60 @@ const useBusMove = (setBus) => {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     };
-  }, [setBus]);
+  }, [setDisPlayBusPoint]);
 
-  return [setBusAdd, resetBusData, moveBusEvent];
+  useEffect(() => {
+    if (busData?.data) {
+      setDisPlayBusPoint((prevBus) => {
+        if (prevBus.length === 0) {
+          setIsBusDataUpdated(true);
+          return busData.data;
+        }
+
+        let isUpdated = false;
+        const updatedBus = prevBus.map((busLocation, index) => {
+          const newBusData = busData.data[index];
+          if (!newBusData) return busLocation;
+
+          if (Number(busLocation.lastNode) !== Number(newBusData.lastNode)) {
+            isUpdated = true;
+            return { ...busLocation, ...newBusData };
+          }
+
+          return busLocation;
+        });
+
+        if (isUpdated) setIsBusDataUpdated(true);
+
+        return updatedBus;
+      });
+    }
+  }, [busData]);
+
+  useEffect(() => {
+    if (isBusDataUpdated) {
+      moveBusEvent();
+      setIsBusDataUpdated(false);
+    }
+  }, [isBusDataUpdated]);
+
+  const setClickBusOnly = (busList) => {
+    if (!busStopId) return null;
+    const candidates = busList.filter(
+      (item) => item.lastNode < parseInt(busStopId)
+    );
+    candidates.sort((a, b) => b.lastNode - a.lastNode);
+    return candidates[0];
+  };
+
+  const closestBusLocation = busStopId
+    ? setClickBusOnly(disPlayBusPoint)
+    : null;
+
+  return { disPlayBusPoint, closestBusLocation };
 };
 
-// Haversine 공식으로 두 지점 간의 거리 계산 (미터 단위)
-function getDistanceInMeters(lat1, lng1, lat2, lng2) {
+const getDistanceInMeters = (lat1, lng1, lat2, lng2) => {
   const R = 6371000;
   const toRadians = (degree) => (degree * Math.PI) / 180;
 
@@ -98,6 +135,5 @@ function getDistanceInMeters(lat1, lng1, lat2, lng2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
   return R * c;
-}
-
-export default useBusMove;
+};
+export default useManageBusData;

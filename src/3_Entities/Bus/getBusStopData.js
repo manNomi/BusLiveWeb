@@ -1,10 +1,17 @@
 import axios from "axios";
 
 // 버스 데이터를 가져오는 비동기 함수
-const getBusData = async () => {
+const getBusStopData = async (busStopId) => {
   try {
-    const endpoint = `http://43.202.84.174:7700/bus/info/all`;
-    const response = await axios.get(endpoint, {});
+    const response = await axios.get(
+      `http://43.202.84.174:7700/bus/busStop/time`,
+      {
+        params: { busId: busStopId }, // 쿼리 파라미터 추가
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     // 상태 코드에 따른 처리
     if (response.status !== 200) {
@@ -35,4 +42,4 @@ const getBusData = async () => {
   }
 };
 
-export default getBusData;
+export default getBusStopData;

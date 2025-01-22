@@ -6,7 +6,7 @@ import STYLE from "./style";
 import NodeMarkers from "./ui/NodeMarkers";
 import BusStopMarkers from "./ui/BusStopMarkers";
 import TestBusMarkers from "./ui/TestBusMarker";
-import BusMarkers from "./ui/BusMarker";
+import BusMarkers from "./ui/BusMarkers";
 import Aside from "./ui/Aside";
 
 import useCheckAtom from "../../4_Shared/recoil/useCheckAtom";
