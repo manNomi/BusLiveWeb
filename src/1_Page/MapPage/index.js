@@ -3,7 +3,8 @@ import { NaverMap, Container as MapContainer } from "react-naver-maps";
 
 import STYLE from "./style";
 
-import Markers from "./ui/Markers";
+import NodeMarkers from "./ui/NodeMarkers";
+import BusStopMarkers from "./ui/BusStopMarkers";
 import TestBusMarkers from "./ui/TestBusMarker";
 import BusMarkers from "./ui/BusMarker";
 import Aside from "./ui/Aside";
@@ -23,7 +24,8 @@ const MapPage = () => {
             maxZoom={18}
             zoom={13}>
             {check.test ? <TestBusMarkers /> : <BusMarkers />}
-            <Markers />
+            <NodeMarkers />
+            <BusStopMarkers />
           </NaverMap>
         </MapContainer>
       </STYLE.Container>

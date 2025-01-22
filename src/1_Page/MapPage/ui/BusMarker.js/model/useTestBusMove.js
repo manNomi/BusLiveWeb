@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { nodeLocation } from "../../../3_Entities/Bus/BusLocationData";
+import { nodeLocation } from "../../../../../3_Entities/Bus/busLocationData";
 
-const useTestBus = () => {
+const useTestBusMove = () => {
   const [bus, setBus] = useState([]);
 
   const setBusAdd = (data) => {
@@ -98,4 +98,4 @@ function getDistanceInMeters(lat1, lng1, lat2, lng2) {
   return R * c; // 두 지점 간의 거리 (미터)
 }
 
-export default useTestBus;
+export default useTestBusMove;

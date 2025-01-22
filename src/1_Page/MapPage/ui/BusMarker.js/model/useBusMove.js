@@ -1,8 +1,7 @@
 import { useCallback, useState, useRef } from "react";
-import { nodeLocation } from "../../../3_Entities/Bus/BusLocationData";
+import { nodeLocation } from "../../../../../3_Entities/Bus/busLocationData";
 
-const useBus = () => {
-  const [bus, setBus] = useState([]);
+const useBusMove = (setBus) => {
   const intervalRef = useRef(null);
 
   const setBusAdd = (data) => {
@@ -78,7 +77,7 @@ const useBus = () => {
     };
   }, [setBus]);
 
-  return [bus, setBusAdd, resetBusData, moveBusEvent];
+  return [setBusAdd, resetBusData, moveBusEvent];
 };
 
 // Haversine 공식으로 두 지점 간의 거리 계산 (미터 단위)
@@ -101,4 +100,4 @@ function getDistanceInMeters(lat1, lng1, lat2, lng2) {
   return R * c;
 }
 
-export default useBus;
+export default useBusMove;
