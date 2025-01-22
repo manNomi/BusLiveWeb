@@ -7,12 +7,16 @@ const useManageNodeList = (nodeListData) => {
   const [check] = useCheckAtom();
 
   useEffect(() => {
+    console.log(displayNodeDataList);
+  }, [displayNodeDataList]);
+
+  useEffect(() => {
     if (check.node) {
       setNodeData((pre) => [...pre, ...nodeListData]);
     } else {
       setNodeData([]);
     }
-  }, [check.node]);
+  }, [check.node, nodeListData]);
 
   return { displayNodeDataList };
 };

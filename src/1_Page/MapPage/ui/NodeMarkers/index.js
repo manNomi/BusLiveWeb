@@ -6,11 +6,11 @@ import useManageNodeList from "./model/useManageNodeList";
 const NodeMarkers = (props) => {
   const { nodeListData } = props;
 
-  const { nodeDataList } = useManageNodeList(nodeListData);
+  const { displayNodeDataList } = useManageNodeList(nodeListData);
 
   return (
     <>
-      {nodeDataList?.map((data, index) => (
+      {displayNodeDataList?.map((data, index) => (
         <Marker key={index} position={{ lat: data.lat, lng: data.lng }} />
       ))}
     </>

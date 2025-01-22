@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import getBusStopData from "../../../../../3_Entities/Bus/getBusStopData";
+import getBusStopData from "../../../../../3_Entities/Bus/getBusData";
 
 // 커스텀 훅 - 버스 위치를 가져오는 훅
 const useGetBusData = () => {
