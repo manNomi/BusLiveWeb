@@ -1,9 +1,12 @@
 import STYLE from "./style";
 import ChatList from "./ui/ChatList";
 import { useNavigate } from "react-router-dom";
+import useGetBusChatList from "./model/useGetBusChatList";
 
 const ChatListContainer = () => {
   const pageChange = useNavigate();
+  const { busChatList } = useGetBusChatList();
+  console.log(busChatList);
   return (
     <STYLE.Container>
       <STYLE.Header>
@@ -15,18 +18,14 @@ const ChatListContainer = () => {
         <STYLE.Title>511번 채팅방</STYLE.Title>
       </STYLE.Header>
       <STYLE.Content>
-        <ChatList
-          title={"인하대후문"}
-          onClick={() => {
-            pageChange("/chat/인하대후문");
-          }}
-        />
-        <ChatList
-          title={"주안역환승정류장"}
-          onClick={() => {
-            pageChange("/chat/주안역환승정류장");
-          }}
-        />
+        {busChatList?.map((busStation) => (
+          <ChatList
+            title={busStation.name}
+            onClick={() => {
+              pageChange(`/chat/${busStation.name}`);
+            }}
+          />
+        ))}
       </STYLE.Content>
       2
     </STYLE.Container>
