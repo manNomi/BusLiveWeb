@@ -1,11 +1,9 @@
-import { useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import Style from "./style";
 
-import { io } from "socket.io-client";
-
 import ChatMessage from "./ui/ChatMessage";
-import InputNickName from "./ui/InputNickName";
+import InputNickNameModal from "./ui/InputNickNameModal";
 import CommentInput from "../../2_Widget/Comment_input";
 
 import useChatListParam from "./model/useChatListParam";
@@ -24,15 +22,11 @@ const ChatPage = () => {
   const { room, joinRoom, sendMessage } = useSoket(nickname, setMessages);
 
   return room === "" ? (
-    <>
-      <InputNickName
-        nickname={nickname}
-        setNickname={setNickname}
-        joinRoom={() => {
-          joinRoom(param);
-        }}
-      />
-    </>
+    <InputNickNameModal
+      nickname={nickname}
+      setNickname={setNickname}
+      joinRoom={joinRoom(param)}
+    />
   ) : (
     <Style.Container>
       <Style.Header>

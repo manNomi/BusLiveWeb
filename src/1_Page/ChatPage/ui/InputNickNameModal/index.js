@@ -8,7 +8,7 @@ import {
   JoinButton,
 } from "./style";
 
-const InputNickName = ({ joinRoom }) => {
+const InputNickNameModal = ({ joinRoom }) => {
   const {
     register,
     handleSubmit,
@@ -51,4 +51,4 @@ const InputNickName = ({ joinRoom }) => {
   );
 };
 
-export default InputNickName;
+export default InputNickNameModal;
