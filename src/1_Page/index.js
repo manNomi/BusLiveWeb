@@ -1,6 +1,7 @@
+import { Routes, Route, Navigate } from "react-router-dom";
+
 import Map from "./Map";
 import ChatPage from "./ChatPage";
-import { Routes, Route, Navigate } from "react-router-dom";
 import ChatList from "./ChatListPage";
 import LoginPage from "./LoginPage";
 const Page = () => {
