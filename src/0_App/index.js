@@ -6,6 +6,7 @@ import ResetStyle from "./style/resetStyle.js";
 import theme from "./style/theme.js";
 import STYLE from "./style/style.js";
 import { RecoilRoot } from "recoil";
+import { NavermapsProvider } from "react-naver-maps";
 
 const App = () => {
   return (
@@ -14,9 +15,13 @@ const App = () => {
         <ResetStyle />
         <GlobalStyles />
         <BrowserRouter>
-          <STYLE.Main>
-            <Page />
-          </STYLE.Main>
+          <NavermapsProvider
+            ncpClientId={process.env.REACT_APP_NAVER_CLIENT_ID} // API 키 로드
+          >
+            <STYLE.Main>
+              <Page />
+            </STYLE.Main>
+          </NavermapsProvider>
         </BrowserRouter>
       </ThemeProvider>
     </RecoilRoot>

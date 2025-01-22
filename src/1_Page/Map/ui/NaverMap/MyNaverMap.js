@@ -1,3 +1,4 @@
+import { NavermapsProvider } from "react-naver-maps";
 import React, { useEffect } from "react";
 import { NaverMap, Container as MapDiv } from "react-naver-maps";
 import Style from "./style";
