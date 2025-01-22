@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import back_icon from "../../assets/back_icon.svg";
+import back_icon from "./assets/back_icon.svg";
 
 const STYLE = {
   Container: styled.div`

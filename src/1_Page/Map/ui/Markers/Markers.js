@@ -8,7 +8,7 @@ import {
 } from "../../../../3_Entities/Bus/BusLocationData";
 import useCheckAtom from "../../../../4_Shared/recoil/useCheckAtom";
 import handleMarkerClick from "../BusStop/markerClick";
-import usePageChange from "../../model/usePageChange";
+import usePageChange from "../../../../4_Shared/model/usePageChange";
 import useBus from "../../model/useBus";
 import useTestBus from "../../model/useTestBus";
 import { useMapOptions } from "../../model/useMapOption";
