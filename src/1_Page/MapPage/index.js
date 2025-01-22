@@ -3,16 +3,17 @@ import { NaverMap, Container as MapContainer } from "react-naver-maps";
 
 import STYLE from "./style";
 
+import useGetBusStopNodeList from "./model/useGetBusStopNodeList";
+
 import NodeMarkers from "./ui/NodeMarkers";
 import BusStopMarkers from "./ui/BusStopMarkers";
-import TestBusMarkers from "./ui/TestBusMarker";
-import BusMarkers from "./ui/BusMarkers";
+
+import BusMarkerList from "./ui/BusMarkerList";
 import Aside from "./ui/Aside";
 
-import useCheckAtom from "../../4_Shared/recoil/useCheckAtom";
-
 const MapPage = () => {
-  const [check] = useCheckAtom();
+  const { nodeListData } = useGetBusStopNodeList();
+
   return (
     <>
       <Aside />
@@ -23,8 +24,8 @@ const MapPage = () => {
             minZoom={10}
             maxZoom={18}
             zoom={13}>
-            {check.test ? <TestBusMarkers /> : <BusMarkers />}
-            <NodeMarkers />
+            <BusMarkerList nodeListData={nodeListData} />
+            <NodeMarkers nodeListData={nodeListData} />
             <BusStopMarkers />
           </NaverMap>
         </MapContainer>

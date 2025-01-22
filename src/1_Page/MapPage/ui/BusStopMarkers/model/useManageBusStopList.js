@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+
+import BUS_STOP_CONFIG from "../config/busStopConfig";
+
 import useCheckAtom from "../../../../../4_Shared/recoil/useCheckAtom";
-import { BUS_STOP_CONFIG } from "../config/busStopConfig";
 
 const useManageBusStopList = (busStopListData) => {
   const [disPlayBusStopList, setDisplayBusStop] = useState(null);

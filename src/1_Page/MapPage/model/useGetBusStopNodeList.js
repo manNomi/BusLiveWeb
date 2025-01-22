@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import getBusStopNodeListData from "../../../../../3_Entities/Bus/getBusStopNodeListData";
+import getBusStopNodeListData from "../../../3_Entities/Bus/getBusStopNodeListData";
 
 // 커스텀 훅 - 버스 위치를 가져오는 훅
 const useGetBusStopListData = () => {

@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-const useManageBusData = (busData) => {
+
+const useManageBusData = (busData, nodeListData) => {
   const [disPlayBusPoint, setDisPlayBusPoint] = useState([]);
   const [isBusDataUpdated, setIsBusDataUpdated] = useState(false);
   const { id: busStopId } = useParams();
@@ -16,16 +17,16 @@ const useManageBusData = (busData) => {
     intervalRef.current = setInterval(() => {
       setDisPlayBusPoint((prevBus) =>
         prevBus.map((busLocation) => {
-          const nextNode = nodeLocation.find(
+          const nextNode = nodeListData.find(
             (node) => node.lastNode === parseInt(busLocation.lastNode) + 1
           );
 
           if (!nextNode) {
             return {
               ...busLocation,
-              lastNode: nodeLocation[0].lastNode,
-              lat: nodeLocation[0].lat,
-              lng: nodeLocation[0].lng,
+              lastNode: nodeListData[0].lastNode,
+              lat: nodeListData[0].lat,
+              lng: nodeListData[0].lng,
             };
           }
 

@@ -1,12 +1,10 @@
 import React from "react";
 import { Marker } from "react-naver-maps";
 
-import useGetBusStopNodeList from "./model/useGetBusStopNodeList";
-
 import useManageNodeList from "./model/useManageNodeList";
 
-const NodeMarkers = () => {
-  const { nodeListData } = useGetBusStopNodeList();
+const NodeMarkers = (props) => {
+  const { nodeListData } = props;
 
   const { nodeDataList } = useManageNodeList(nodeListData);
 
