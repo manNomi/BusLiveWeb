@@ -131,7 +131,6 @@ const useKakaoLogin = () => {
         });
       });
 
-      console.log("로그인 성공", authObj);
       setCookie("access_token", authObj.access_token, 7);
       navigate("/home");
     } catch (error) {

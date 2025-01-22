@@ -12,7 +12,7 @@ import useSoket from "./model/useSoket";
 import usePageChange from "../../4_Shared/model/usePageChange";
 
 const ChatPage = () => {
-  const { id } = useParams();
+  const { busStation } = useParams();
   const [messages, setMessages] = useState([]);
   const [nickname, setNickname] = useState("");
   const pageChange = usePageChange();
@@ -25,16 +25,15 @@ const ChatPage = () => {
     <InputNickNameModal
       nickname={nickname}
       setNickname={setNickname}
-      joinRoom={joinRoom(param)}
+      joinRoom={() => {
+        joinRoom(param);
+      }}
     />
   ) : (
     <Style.Container>
       <Style.Header>
-        <Style.BackBtn
-          onClick={() => {
-            pageChange("/home");
-          }}></Style.BackBtn>
-        <Style.Logo>{id}</Style.Logo>
+        <Style.BackBtn onClick={pageChange("/home")}></Style.BackBtn>
+        <Style.Logo>{busStation}</Style.Logo>
         <Style.Title>511번 채팅방</Style.Title>
       </Style.Header>
       <Style.Content ref={scrollRef}>

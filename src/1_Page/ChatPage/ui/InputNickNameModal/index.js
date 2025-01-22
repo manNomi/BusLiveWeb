@@ -1,30 +1,25 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import {
-  ModalOverlay,
-  ModalContainer,
-  ModalTitle,
-  NicknameInput,
-  JoinButton,
-} from "./style";
+import STYLE from "./style";
 
-const InputNickNameModal = ({ joinRoom }) => {
+const InputNickNameModal = (props) => {
+  const { joinRoom } = props;
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    joinRoom(data.nickname);
+  const onSubmit = () => {
+    joinRoom();
   };
 
   return (
-    <ModalOverlay>
-      <ModalContainer>
-        <ModalTitle>닉네임을 입력하세요</ModalTitle>
+    <STYLE.ModalOverlay>
+      <STYLE.ModalContainer>
+        <STYLE.ModalTitle>닉네임을 입력하세요</STYLE.ModalTitle>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <NicknameInput
+          <STYLE.NicknameInput
             type="text"
             placeholder="닉네임"
             {...register("nickname", {
@@ -39,15 +34,13 @@ const InputNickNameModal = ({ joinRoom }) => {
               },
             })}
           />
-          {errors.nickname && (
-            <p style={{ color: "red", fontSize: "12px" }}>
-              {errors.nickname.message}
-            </p>
-          )}
-          <JoinButton type="submit">입장하기</JoinButton>
+          <STYLE.ErrorMessage>
+            {errors.nickname && errors.nickname.message}
+          </STYLE.ErrorMessage>
+          <STYLE.JoinButton type="submit">입장하기</STYLE.JoinButton>
         </form>
-      </ModalContainer>
-    </ModalOverlay>
+      </STYLE.ModalContainer>
+    </STYLE.ModalOverlay>
   );
 };
 
