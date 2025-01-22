@@ -3,7 +3,7 @@ import STYLE from "./style";
 import useKakaoLogin from "./model/useKakaoLogin";
 
 const LoginPage = () => {
-  const { handleLogin, isLoaded } = useKakaoLogin();
+  const { handleLogin } = useKakaoLogin();
 
   return (
     <STYLE.Container>
