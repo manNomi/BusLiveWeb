@@ -1,19 +1,22 @@
-import { PC, Mobile } from "./model/useMediaQuery.js";
+import Page from "../1_Page";
 import { BrowserRouter } from "react-router-dom";
-import GlobalStyle from "./style/GloabalStyle.js";
-import Page from "../page/index.js";
+import { ThemeProvider } from "styled-components";
+import GlobalStyles from "./style/globalStyle.js";
+import ResetStyle from "./style/resetStyle.js";
+import theme from "./style/theme.js";
+import STYLE from "./style/style.js";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <GlobalStyle />
-      <PC>
-        <Page />
-      </PC>
-      <Mobile>
-        <Page />
-      </Mobile>
-    </BrowserRouter>
+    <ThemeProvider theme={theme.defaultTheme}>
+      <ResetStyle />
+      <GlobalStyles />
+      <BrowserRouter>
+        <STYLE.Main>
+          <Page />
+        </STYLE.Main>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 };
 
