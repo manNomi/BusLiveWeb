@@ -69,16 +69,17 @@ const useManageBusData = (busData, nodeListData) => {
   }, [setDisPlayBusPoint]);
 
   useEffect(() => {
-    if (busData?.data) {
+    console.log("업데으트", busData);
+    if (busData) {
       setDisPlayBusPoint((prevBus) => {
         if (prevBus.length === 0) {
           setIsBusDataUpdated(true);
-          return busData.data;
+          return busData;
         }
 
         let isUpdated = false;
         const updatedBus = prevBus.map((busLocation, index) => {
-          const newBusData = busData.data[index];
+          const newBusData = busData[index];
           if (!newBusData) return busLocation;
 
           if (Number(busLocation.lastNode) !== Number(newBusData.lastNode)) {
@@ -103,18 +104,32 @@ const useManageBusData = (busData, nodeListData) => {
     }
   }, [isBusDataUpdated]);
 
+  // useEffect(() => {
+  //   console.log("busStopId:", busStopId);
+  //   console.log("disPlayBusPoint:", disPlayBusPoint);
+  //   console.log("Type of disPlayBusPoint:", typeof disPlayBusPoint);
+  // }, [disPlayBusPoint, busStopId]);
+
   const setClickBusOnly = (busList) => {
-    if (!busStopId) return null;
+    if (!busStopId || !Array.isArray(busList) || busList.length === 0) {
+      return null;
+    }
     const candidates = busList.filter(
       (item) => item.lastNode < parseInt(busStopId)
     );
+
+    if (candidates.length === 0) {
+      return null; // 필터 결과가 없는 경우
+    }
+
     candidates.sort((a, b) => b.lastNode - a.lastNode);
     return candidates[0];
   };
 
-  const closestBusLocation = busStopId
-    ? setClickBusOnly(disPlayBusPoint)
-    : null;
+  const closestBusLocation =
+    busStopId && disPlayBusPoint.length > 0
+      ? setClickBusOnly(disPlayBusPoint)
+      : null;
 
   return { disPlayBusPoint, closestBusLocation };
 };

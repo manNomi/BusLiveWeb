@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import ReactDOMServer from "react-dom/server";
 
 import busIcon from "../../assets/bus.svg";
@@ -9,8 +9,6 @@ import BusMarker from "./ui/BusMarker";
 
 import useGetBusData from "./model/useGetBusData";
 import useManageBusData from "./model/useManageBusData";
-
-import useCheckAtom from "../../../../4_Shared/recoil/useCheckAtom";
 
 // 마커 아이콘을 메모이제이션 처리
 const getBusMarkerIcon = (congestion, lastbusyn) => {
@@ -25,7 +23,6 @@ const getBusMarkerIcon = (congestion, lastbusyn) => {
 
 const BusMarkerList = (props) => {
   const { nodeListData } = props;
-  const [check] = useCheckAtom();
 
   const { busData } = useGetBusData(); // 10초에 한번씩 호출
   const { disPlayBusPoint, closestBusLocation } = useManageBusData(

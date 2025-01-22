@@ -4,7 +4,7 @@ import axios from "axios";
 const getBusData = async () => {
   try {
     const endpoint = `http://43.202.84.174:7700/bus/info/all`;
-    const response = await axios.get(endpoint, {});
+    const response = await axios.get(endpoint, { data: [] });
 
     // 상태 코드에 따른 처리
     if (response.status !== 200) {
