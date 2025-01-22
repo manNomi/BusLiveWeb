@@ -120,22 +120,36 @@ const useKakaoLogin = () => {
     initializeKakao();
   }, [navigate]);
   // 카카오 로그인 함수
-  const handleLogin = useCallback(() => {
+  const handleLogin = async () => {
     if (!window.Kakao) {
+      console.error("Kakao SDK가 로드되지 않았습니다.");
       return;
     }
-    window.Kakao.Auth.login({
-      success: (authObj) => {
-        console.log("로그인 성공", authObj);
-        setCookie("access_token", authObj.access_token);
-        setCookie("refresh_token", authObj.access_token);
-        navigate("/home");
-      },
-      fail: (err) => {
-        console.error("로그인 실패", err);
-      },
-    });
-  }, [navigate]);
+    // Kakao SDK 초기화 확인
+    if (!window.Kakao.isInitialized()) {
+      console.log("Kakao SDK 초기화 중...");
+      window.Kakao.init(process.env.REACT_APP_KAKAO_CLIENT_ID);
+    }
+    try {
+      await new Promise((resolve, reject) => {
+        window.Kakao.Auth.login({
+          success: (authObj) => {
+            console.log("로그인 성공", authObj);
+            setCookie("access_token", authObj.access_token, 7);
+            resolve(authObj);
+          },
+          fail: (err) => {
+            console.error("로그인 실패", err);
+            reject(err);
+          },
+        });
+      });
+
+      navigate("/home");
+    } catch (error) {
+      console.error("카카오 로그인 중 오류 발생:", error);
+    }
+  };
 
   return { handleLogin };
 };
