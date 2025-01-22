@@ -18,7 +18,7 @@ const MapPage = () => {
     <>
       <Aside />
       <STYLE.Container>
-        <MapContainer style={{ width: "100%", height: "90vh" }}>
+        <MapContainer style={{ width: "100%", height: "100vh" }}>
           <NaverMap
             center={{ lat: 37.450284, lng: 126.653478 }}
             minZoom={10}

@@ -21,7 +21,6 @@ const useManageBusData = (busData, nodeListData) => {
           const nextNode = nodeListData.find(
             (node) => node.lastNode === parseInt(busLocation.lastNode) + 1
           );
-
           if (!nextNode) {
             return {
               ...busLocation,

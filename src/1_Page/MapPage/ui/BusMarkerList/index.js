@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import ReactDOMServer from "react-dom/server";
 
-import busIcon from "../../assets/bus.svg";
+import BusIcon from "./assets/YellowBusIcon";
 import BusStopIcon from "../../assets/BusIcon";
 import BusStopIconLast from "../../assets/BusIconLast";
 
@@ -21,16 +21,14 @@ const getBusMarkerIcon = (congestion, lastbusyn) => {
   );
 };
 
-const BusMarkerList = (props) => {
-  const { nodeListData } = props;
-
-  const { busData } = useGetBusData(); // 10초에 한번씩 호출
+const BusMarkerList = ({ nodeListData }) => {
+  const { busData } = useGetBusData(); // 10초에 한 번씩 호출
   const { disPlayBusPoint, closestBusLocation } = useManageBusData(
     busData,
     nodeListData
   );
 
-  // 가까운 버스 위치 마커 아이콘 메모이제이션
+  // 가까운 버스 마커 아이콘 메모이제이션
   const closestBusIcon = useMemo(() => {
     if (!closestBusLocation) return null;
     return getBusMarkerIcon(
@@ -38,6 +36,14 @@ const BusMarkerList = (props) => {
       closestBusLocation.lastbusyn
     );
   }, [closestBusLocation]);
+
+  // 버스 아이콘을 메모이제이션하여 중복 생성 방지
+  const busIconHtml = useMemo(() => {
+    return (color) =>
+      ReactDOMServer.renderToString(
+        <BusIcon width={20} height={20} color={color} />
+      );
+  }, []);
 
   return (
     <>
@@ -55,7 +61,13 @@ const BusMarkerList = (props) => {
               key={busLocation.id || `${busLocation.lat}-${busLocation.lng}`} // 고유한 키 적용
               lat={busLocation.lat}
               lng={busLocation.lng}
-              icon={`<img src="${busIcon}" width="20" height="20" />`}
+              icon={
+                busIconHtml(busLocation.congestion)
+                  ? `data:image/svg+xml,${encodeURIComponent(
+                      busIconHtml(busLocation.congestion)
+                    )}`
+                  : "/icons/default-bus.svg"
+              }
             />
           ))
       )}
