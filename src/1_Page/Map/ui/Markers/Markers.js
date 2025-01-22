@@ -5,14 +5,14 @@ import useNode from "../../model/useNodeInit";
 import {
   busStop,
   nodeLocation,
-} from "../../../../entities/Bus/BusLocationData";
-import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
+} from "../../../../3_Entities/Bus/BusLocationData";
+import useCheckAtom from "../../../../4_Shared/recoil/useCheckAtom";
 import handleMarkerClick from "../BusStop/markerClick";
 import usePageChange from "../../model/usePageChange";
 import useBus from "../../model/useBus";
 import useTestBus from "../../model/useTestBus";
 import { useMapOptions } from "../../model/useMapOption";
-import useBusStopData from "../../../../entities/Bus/useBusStopClick";
+import useBusStopData from "../../../../3_Entities/Bus/useBusStopClick";
 
 const Markers = () => {
   const [busStops, setBusAdd, setBusDelete] = useBusStop();

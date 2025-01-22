@@ -1,9 +1,4 @@
 import ReactDOM from "react-dom/client";
-import App from "./App";
-import { RecoilRoot } from "recoil";
+import App from "./0_App";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <RecoilRoot>
-    <App />
-  </RecoilRoot>
-);
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);

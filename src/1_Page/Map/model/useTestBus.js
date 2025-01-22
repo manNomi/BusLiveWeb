@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { nodeLocation } from "../../../entities/Bus/BusLocationData";
+import { nodeLocation } from "../../../3_Entities/Bus/BusLocationData";
 
 const useTestBus = () => {
   const [bus, setBus] = useState([]);

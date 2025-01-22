@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Style from "./style";
-import CommentInput from "../../../../widget/comment_input";
+import CommentInput from "../../../../2_Widget/comment_input";
 import { io } from "socket.io-client";
 import MyChat from "../Chat/MyChat";
 import AnotherChat from "../Chat/AnotherChat";

@@ -1,10 +1,9 @@
 import MinusIcon from "../../asset/minus_icon";
 import PlusIcon from "../../asset/plus_icon";
 import CheckBox from "../CheckBox/CheckBox";
-import SearchContainer from "../search_container/SearchContainer";
 import HoverIcon from "../hover_icon/HoverIcon";
 import Style from "./style";
-import useCheckAtom from "../../../../../../shared/recoil/useCheckAtom";
+import useCheckAtom from "../../../../../../4_Shared/recoil/useCheckAtom";
 import useAside from "../../model/useAside";
 import { useNavigate } from "react-router-dom";
 import TextBox from "../TextBox/CheckBox";

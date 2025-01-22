@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import BusStop from "./BusStop";
 import ReactDOM from "react-dom/client";
 

@@ -1,18 +1,12 @@
-import React, { useEffect, useState } from "react";
-import {
-  NaverMap,
-  Marker,
-  Container as MapDiv,
-  useMap,
-} from "react-naver-maps";
+import React, { useEffect } from "react";
+import { NaverMap, Container as MapDiv } from "react-naver-maps";
 import Style from "./style";
 import { useMapOptions } from "../../model/useMapOption";
 import Markers from "../Markers/Markers";
 import BusMarkers from "../Bus/BusMarkers";
-import Aside from "../aside";
+import Aside from "../Aside";
 import TestBusMarkers from "../Bus/TestBusMarker";
-import useCheckAtom from "../../../../shared/recoil/useCheckAtom";
-import Advertise from "../Advertise";
+import useCheckAtom from "../../../../4_Shared/recoil/useCheckAtom";
 
 const MyNaverMap = () => {
   const [check, setCheck] = useCheckAtom();
@@ -41,7 +35,6 @@ const MyNaverMap = () => {
           </NaverMap>
         </MapDiv>
       </Style.Container>
-      <Advertise />
     </>
   );
 };

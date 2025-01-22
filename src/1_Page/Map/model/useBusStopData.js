@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useBusStopData } from "../../../entities/Bus/useBusStopClick";
 
 const useBusStop = () => {
   const [busStopData, setBusStop] = useState([]);
