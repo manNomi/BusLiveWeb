@@ -10,7 +10,7 @@ const NodeMarkers = (props) => {
 
   return (
     <>
-      {nodeDataList.map((data, index) => (
+      {nodeDataList?.map((data, index) => (
         <Marker key={index} position={{ lat: data.lat, lng: data.lng }} />
       ))}
     </>

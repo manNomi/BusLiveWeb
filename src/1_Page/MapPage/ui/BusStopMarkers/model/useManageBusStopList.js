@@ -5,7 +5,7 @@ import BUS_STOP_CONFIG from "../config/busStopConfig";
 import useCheckAtom from "../../../../../4_Shared/recoil/useCheckAtom";
 
 const useManageBusStopList = (busStopListData) => {
-  const [disPlayBusStopList, setDisplayBusStop] = useState(null);
+  const [disPlayBusStopList, setDisplayBusStop] = useState([]);
   const [check] = useCheckAtom();
 
   useEffect(() => {
@@ -28,9 +28,11 @@ const useManageBusStopList = (busStopListData) => {
     }
   }, [check.high]);
 
-  // 특정 방향의 버스 필터링
   const filterBusStops = (threshold, type) => {
-    const filteredStops = busStopListData.filter((busStation) =>
+    // busStopListData가 배열이 아닌 경우 빈 배열을 기본값으로 설정
+    const filteredStops = (
+      Array.isArray(busStopListData) ? busStopListData : []
+    ).filter((busStation) =>
       type === "low"
         ? busStation.lastNode < threshold
         : busStation.lastNode >= threshold
@@ -48,14 +50,15 @@ const useManageBusStopList = (busStopListData) => {
     }
   };
 
-  // 특정 방향의 버스 정류장 제거
   const removeBusStops = (threshold, direction) => {
     setDisplayBusStop((busStopList) =>
-      busStopList.filter((busStop) =>
-        direction === "up"
-          ? busStop.lastNode < threshold
-          : busStop.lastNode >= threshold
-      )
+      Array.isArray(busStopList)
+        ? busStopList.filter((busStop) =>
+            direction === "up"
+              ? busStop.lastNode < threshold
+              : busStop.lastNode >= threshold
+          )
+        : []
     );
   };
 
