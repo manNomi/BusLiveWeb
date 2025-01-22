@@ -1,4 +1,4 @@
-import BusStop from "./BusStop";
+import BusStop from "./";
 import ReactDOM from "react-dom/client";
 
 const handleMarkerClick = (
@@ -7,7 +7,6 @@ const handleMarkerClick = (
   changePage,
   setBus,
   setTestBus,
-  setOptionEvent,
   busStopData,
   setBusID
 ) => {
@@ -35,7 +34,6 @@ const handleMarkerClick = (
       setTestBus={setTestBus}
       changePage={changePage}
       stopData={stopData}
-      setOptionEvent={() => setOptionEvent({ center: coord, zoom: 15 })}
       closeEvent={() => {
         if (map.infoWindow) {
           map.infoWindow.setMap(null);

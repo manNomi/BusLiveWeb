@@ -1,5 +1,6 @@
 import styled from "styled-components";
-export default {
+
+const STYLE = {
   Container: styled.nav`
     display: flex;
     width: 120px;
@@ -34,3 +35,5 @@ export default {
     text-align: center;
   `,
 };
+
+export default STYLE;

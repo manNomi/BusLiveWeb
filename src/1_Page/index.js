@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Map from "./Map";
+import MapPage from "./MapPage";
 import ChatPage from "./ChatPage";
 import ChatList from "./ChatListPage";
 import LoginPage from "./LoginPage";
@@ -8,7 +8,7 @@ const Page = () => {
   return (
     <>
       <Routes>
-        <Route path="/home/:id?" element={<Map />} />
+        <Route path="/home/:id?" element={<MapPage />} />
         <Route path="/chat/:id" element={<ChatPage />} />
         <Route path="/chatList" element={<ChatList />} />
         <Route path="/" element={<LoginPage />} />

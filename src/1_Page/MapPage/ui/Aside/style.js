@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export default {
+const STYLE = {
   Aside: styled.aside`
     display: flex;
     flex-direction: column;
@@ -20,3 +20,4 @@ export default {
     margin-left: 10px;
   `,
 };
+export default STYLE;

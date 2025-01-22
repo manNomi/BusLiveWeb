@@ -11,7 +11,6 @@ import handleMarkerClick from "../BusStop/markerClick";
 import usePageChange from "../../../../4_Shared/model/usePageChange";
 import useBus from "../../model/useBus";
 import useTestBus from "../../model/useTestBus";
-import { useMapOptions } from "../../model/useMapOption";
 import useBusStopData from "../../../../3_Entities/Bus/useBusStopClick";
 
 const Markers = () => {
@@ -21,7 +20,6 @@ const Markers = () => {
   const changePage = usePageChange("./chat");
   const [, setBus, ,] = useBus();
   const [, setTestBus, ,] = useTestBus();
-  const [, setOptionEvent] = useMapOptions();
   const map = useMap(); // 지도 객체 가져오기
 
   const [retroBusStopData, setBusID, error] = useBusStopData(null);
@@ -40,7 +38,6 @@ const Markers = () => {
         changePage,
         setBus,
         setTestBus,
-        setOptionEvent,
         retroBusStopData.restTimeText,
         setBusID
       );

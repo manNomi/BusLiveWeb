@@ -1,13 +1,14 @@
-import { NavermapsProvider } from "react-naver-maps";
-import React, { useEffect } from "react";
-import { NaverMap, Container as MapDiv } from "react-naver-maps";
+import React from "react";
+import { NaverMap, Container as MapContainer } from "react-naver-maps";
+
 import STYLE from "./style";
-import { useMapOptions } from "../../model/useMapOption";
-import Markers from "../Markers/Markers";
-import BusMarkers from "../Bus/BusMarkers";
-import Aside from "../Aside";
-import TestBusMarkers from "../Bus/TestBusMarker";
-import useCheckAtom from "../../../../4_Shared/recoil/useCheckAtom";
+
+import Markers from "./ui/Markers";
+import TestBusMarkers from "./ui/TestBusMarker";
+import BusMarkers from "./ui/BusMarker";
+import Aside from "./ui/Aside";
+
+import useCheckAtom from "../../4_Shared/recoil/useCheckAtom";
 
 const MapPage = () => {
   const [check] = useCheckAtom();
@@ -15,7 +16,7 @@ const MapPage = () => {
     <>
       <Aside />
       <STYLE.Container>
-        <MapDiv style={{ width: "100%", height: "90vh" }}>
+        <MapContainer style={{ width: "100%", height: "90vh" }}>
           <NaverMap
             center={{ lat: 37.450284, lng: 126.653478 }}
             minZoom={10}
@@ -24,7 +25,7 @@ const MapPage = () => {
             {check.test ? <TestBusMarkers /> : <BusMarkers />}
             <Markers />
           </NaverMap>
-        </MapDiv>
+        </MapContainer>
       </STYLE.Container>
     </>
   );

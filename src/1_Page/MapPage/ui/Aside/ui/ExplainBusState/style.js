@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export default {
+const STYLE = {
   Container: styled.div`
     top: 0;
     right: 0;
@@ -23,3 +23,5 @@ export default {
     text-align: center;
   `,
 };
+
+export default STYLE;

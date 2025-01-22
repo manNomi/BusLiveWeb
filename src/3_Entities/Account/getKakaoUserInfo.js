@@ -1,4 +1,4 @@
-import { getCookie } from "../../../4_Shared/model/cookie";
+import { getCookie } from "../../4_Shared/model/cookie";
 
 const getKakaoUserInfo = async () => {
   try {
