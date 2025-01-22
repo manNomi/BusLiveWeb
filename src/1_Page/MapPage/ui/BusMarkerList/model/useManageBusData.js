@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import useCheckAtom from "../../../../../4_Shared/recoil/useCheckAtom";
 
 const useManageBusData = (busData, nodeListData) => {
   const [disPlayBusPoint, setDisPlayBusPoint] = useState([]);
   const [isBusDataUpdated, setIsBusDataUpdated] = useState(false);
   const { id: busStopId } = useParams();
+  const [check] = useCheckAtom();
 
   const intervalRef = useRef(null);
 
   const moveBusEvent = useCallback(() => {
-    const speed = 5; // 고정된 속도 (m/s)
-
+    const speed = 10;
     // 이미 interval이 실행 중이라면 새로 설정하지 않음
     if (intervalRef.current) return;
 
@@ -69,7 +70,6 @@ const useManageBusData = (busData, nodeListData) => {
   }, [setDisPlayBusPoint]);
 
   useEffect(() => {
-    console.log("업데으트", busData);
     if (busData) {
       setDisPlayBusPoint((prevBus) => {
         if (prevBus.length === 0) {
@@ -98,17 +98,11 @@ const useManageBusData = (busData, nodeListData) => {
   }, [busData]);
 
   useEffect(() => {
-    if (isBusDataUpdated) {
+    if (isBusDataUpdated && disPlayBusPoint.length > 0) {
       moveBusEvent();
       setIsBusDataUpdated(false);
     }
-  }, [isBusDataUpdated]);
-
-  // useEffect(() => {
-  //   console.log("busStopId:", busStopId);
-  //   console.log("disPlayBusPoint:", disPlayBusPoint);
-  //   console.log("Type of disPlayBusPoint:", typeof disPlayBusPoint);
-  // }, [disPlayBusPoint, busStopId]);
+  }, [isBusDataUpdated, check.test, disPlayBusPoint]);
 
   const setClickBusOnly = (busList) => {
     if (!busStopId || !Array.isArray(busList) || busList.length === 0) {

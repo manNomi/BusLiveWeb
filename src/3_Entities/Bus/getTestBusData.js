@@ -48,9 +48,31 @@ const testBusData = () => {
   return nodes;
 };
 
-// 버스 데이터를 가져오는 비동기 함수
+// 랜덤 개수의 lastNode를 증가시키는 함수
+const updateRandomBusNodes = (busData) => {
+  // 업데이트할 노드 개수 (1, 2, 또는 4)
+  const updateCounts = [1, 2, 4];
+  const numToUpdate =
+    updateCounts[Math.floor(Math.random() * updateCounts.length)];
+  const indices = new Set();
+  while (indices.size < numToUpdate) {
+    indices.add(Math.floor(Math.random() * busData.length));
+  }
+  indices.forEach((index) => {
+    busData[index].lastNode += 1;
+  });
+
+  return [...busData]; // 새로운 배열 반환
+};
+
+// 비동기적으로 10초마다 lastNode 업데이트
 const getBusTestData = async () => {
-  const data = testBusData();
+  let data = testBusData().data;
+
+  setInterval(() => {
+    data = updateRandomBusNodes(data);
+  }, 8000);
+
   return data;
 };
 
