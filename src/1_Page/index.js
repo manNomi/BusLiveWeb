@@ -1,18 +1,18 @@
-import Map from "./Map";
+import { Routes, Route, Navigate } from "react-router-dom";
+
+import MapPage from "./MapPage";
 import ChatPage from "./ChatPage";
-import { Routes, Route } from "react-router-dom";
 import ChatList from "./ChatListPage";
-import SplashPage from "./SplashPage";
 import LoginPage from "./LoginPage";
 const Page = () => {
   return (
     <>
       <Routes>
-        <Route path="/home/:id?" element={<Map />} />
+        <Route path="/home/:id?" element={<MapPage />} />
         <Route path="/chat/:id" element={<ChatPage />} />
         <Route path="/chatList" element={<ChatList />} />
-        <Route path="/" element={<SplashPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );

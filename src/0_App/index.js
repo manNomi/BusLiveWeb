@@ -1,19 +1,30 @@
-import { PC, Mobile } from "./model/useMediaQuery.js";
+import Page from "../1_Page";
 import { BrowserRouter } from "react-router-dom";
-import GlobalStyle from "./style/GloabalStyle.js";
-import Page from "../page/index.js";
+import { ThemeProvider } from "styled-components";
+import GlobalStyles from "./style/globalStyle.js";
+import ResetStyle from "./style/resetStyle.js";
+import theme from "./style/theme.js";
+import STYLE from "./style/style.js";
+import { RecoilRoot } from "recoil";
+import { NavermapsProvider } from "react-naver-maps";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <GlobalStyle />
-      <PC>
-        <Page />
-      </PC>
-      <Mobile>
-        <Page />
-      </Mobile>
-    </BrowserRouter>
+    <RecoilRoot>
+      <ThemeProvider theme={theme.defaultTheme}>
+        <ResetStyle />
+        <GlobalStyles />
+        <BrowserRouter>
+          <NavermapsProvider
+            ncpClientId={process.env.REACT_APP_NAVER_CLIENT_ID} // API 키 로드
+          >
+            <STYLE.Main>
+              <Page />
+            </STYLE.Main>
+          </NavermapsProvider>
+        </BrowserRouter>
+      </ThemeProvider>
+    </RecoilRoot>
   );
 };
 
