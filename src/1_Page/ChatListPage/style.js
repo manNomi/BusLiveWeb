@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import back_icon from "../../assets/back_icon.svg";
+import back_icon from "./assets/back_icon.svg";
 
-export default {
+const STYLE = {
   Container: styled.div`
     display: flex;
     flex-direction: column;
@@ -43,3 +43,5 @@ export default {
     background-size: cover;
   `,
 };
+
+export default STYLE;
