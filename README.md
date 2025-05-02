@@ -15,14 +15,6 @@
 
 ## 🖼 스크린샷
 
-<style>
-  .screenshot-table img {
-    width: 200px; /* 너비 조정 */
-    height: 350px; /* 고정 높이 적용 */
-    object-fit: cover; /* 이미지 비율 유지하면서 크기 맞춤 */
-  }
-</style>
-
 <table class="screenshot-table" align="center">
   <tr>
     <td align="center">
