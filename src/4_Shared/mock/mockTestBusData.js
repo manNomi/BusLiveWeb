@@ -1,4 +1,4 @@
-const testBusData = () => {
+export const getBusTestData = () => {
   const nodes = {
     data: [
       {
@@ -49,7 +49,7 @@ const testBusData = () => {
 };
 
 // 랜덤 개수의 lastNode를 증가시키는 함수
-const updateRandomBusNodes = (busData) => {
+export const updateRandomBusNodes = (busData) => {
   // 업데이트할 노드 개수 (1, 2, 또는 4)
   const updateCounts = [1, 2, 4];
   const numToUpdate =
@@ -64,16 +64,3 @@ const updateRandomBusNodes = (busData) => {
 
   return [...busData]; // 새로운 배열 반환
 };
-
-// 비동기적으로 10초마다 lastNode 업데이트
-const getBusTestData = async () => {
-  let data = testBusData().data;
-
-  setInterval(() => {
-    data = updateRandomBusNodes(data);
-  }, 8000);
-
-  return data;
-};
-
-export default getBusTestData;

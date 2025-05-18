@@ -1,6 +1,6 @@
 import React from "react";
 
-const BusStopIcon = (props) => (
+const BusStopIconLast = (props) => (
   <svg
     width={`${props.width}px`}
     height={`${props.height}px`}
@@ -61,4 +61,4 @@ const BusStopIcon = (props) => (
   </svg>
 );
 
-export default BusStopIcon;
+export default BusStopIconLast;

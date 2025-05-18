@@ -1,9 +1,9 @@
 import { atom, useSetRecoilState } from "recoil";
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 
 const checkAtom = atom({
   key: "CHECK",
-  default: { node: false, bus: true, test: false, high: true, low: false },
+  default: { node: false, bus: true, test: true, high: true, low: false },
 });
 
 const useCheckAtom = () => {

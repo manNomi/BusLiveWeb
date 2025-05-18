@@ -8,7 +8,7 @@ const Page = () => {
   return (
     <>
       <Routes>
-        <Route path="/home/:id?" element={<MapPage />} />
+        <Route path="/map/:id?" element={<MapPage />} />
         <Route path="/chat/:id" element={<ChatPage />} />
         <Route path="/chatList" element={<ChatList />} />
         <Route path="/" element={<LoginPage />} />

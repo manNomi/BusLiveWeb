@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Style from "./style";
 
 import ChatMessage from "./ui/ChatMessage";
@@ -9,15 +9,14 @@ import CommentInput from "../../2_Widget/Comment_input";
 import useChatListParam from "./model/useChatListParam";
 import useScrollDown from "./model/useScrollDown";
 import useSoket from "./model/useSoket";
-import usePageChange from "../../4_Shared/model/usePageChange";
 
 const ChatPage = () => {
   const { busStation } = useParams();
   const [messages, setMessages] = useState([]);
   const [nickname, setNickname] = useState("");
-  const pageChange = usePageChange();
 
-  const { param } = useChatListParam(pageChange);
+  const navigate = useNavigate();
+  const { param } = useChatListParam();
   const { scrollRef } = useScrollDown(messages);
   const { room, joinRoom, sendMessage } = useSoket(nickname, setMessages);
 
@@ -32,7 +31,10 @@ const ChatPage = () => {
   ) : (
     <Style.Container>
       <Style.Header>
-        <Style.BackBtn onClick={pageChange("/home")}></Style.BackBtn>
+        <Style.BackBtn
+          onClick={() => {
+            navigate("/home");
+          }}></Style.BackBtn>
         <Style.Logo>{busStation}</Style.Logo>
         <Style.Title>511번 채팅방</Style.Title>
       </Style.Header>
