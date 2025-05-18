@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 
 import useGetBusDataHandler from "./model/useGetBusDataHandler";
 import useManageBusData from "./model/useManageBusData";
@@ -13,14 +13,6 @@ const BusMarkerList = ({ nodeListData }) => {
     nodeListData
   );
 
-  const closestBusIcon = useMemo(() => {
-    if (!closestBusLocation) return "";
-    return getBusMarker(
-      closestBusLocation.congestion,
-      closestBusLocation.lastbusyn
-    );
-  }, [closestBusLocation]);
-
   return (
     <>
       {closestBusLocation ? (
@@ -31,7 +23,12 @@ const BusMarkerList = ({ nodeListData }) => {
               closestBusLocation.lng
             )
           }
-          icon={{ content: closestBusIcon }}
+          icon={{
+            content: getBusMarker(
+              closestBusLocation.congestion,
+              closestBusLocation.lastbusyn
+            ),
+          }}
         />
       ) : (
         disPlayBusPoint
