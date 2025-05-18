@@ -1,4 +1,4 @@
-import { Marker } from "react-naver-maps";
+import BusStopMarker from "./ui/BusStopMarker";
 
 import useManageBusStopList from "./model/useManageBusStopList";
 
@@ -10,7 +10,7 @@ const BusStopMarkers = (props) => {
   return (
     <>
       {disPlayBusStopList.map((stopData, index) => (
-        <Marker key={index} position={stopData.busPoint} />
+        <BusStopMarker key={index} stopData={stopData} />
       ))}
     </>
   );
