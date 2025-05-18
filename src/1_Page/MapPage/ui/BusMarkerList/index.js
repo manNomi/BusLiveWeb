@@ -1,36 +1,48 @@
-import BusStopIcon from "../../../../4_Shared/assets/BusIcon";
-import BusIconLast from "../../../../4_Shared/assets/BusStopIconLast";
-import CustomMarker from "../../../../4_Shared/ui/CustomMarker";
+import React, { useMemo } from "react";
 
 import useGetBusDataHandler from "./model/useGetBusDataHandler";
 import useManageBusData from "./model/useManageBusData";
+import { Marker } from "react-naver-maps";
+import { getBusMarker } from "./util/getBusMarker";
 
-const BusMarkerList = (props) => {
-  const { nodeListData } = props;
-
-  const [busData] = useGetBusDataHandler(); // 10초에 한번씩 호출
+/* main */
+const BusMarkerList = ({ nodeListData }) => {
+  const [busData] = useGetBusDataHandler();
   const { disPlayBusPoint, closestBusLocation } = useManageBusData(
     busData,
     nodeListData
   );
 
+  const closestBusIcon = useMemo(() => {
+    if (!closestBusLocation) return "";
+    return getBusMarker(
+      closestBusLocation.congestion,
+      closestBusLocation.lastbusyn
+    );
+  }, [closestBusLocation]);
+
   return (
     <>
       {closestBusLocation ? (
-        <CustomMarker
-          lat={closestBusLocation.lat}
-          lng={closestBusLocation.lng}
-          icon={BusIconLast}
+        <Marker
+          position={
+            new window.naver.maps.LatLng(
+              closestBusLocation.lat,
+              closestBusLocation.lng
+            )
+          }
+          icon={{ content: closestBusIcon }}
         />
       ) : (
         disPlayBusPoint
-          .filter((bus) => bus?.lat && bus?.lng) // 유효한 좌표만 필터링
-          .map((busLocation) => (
-            <CustomMarker
-              key={busLocation.id || `${busLocation.lat}-${busLocation.lng}`} // 고유한 키 적용
-              lat={busLocation.lat}
-              lng={busLocation.lng}
-              icon={BusStopIcon}
+          .filter((b) => b?.lat && b?.lng)
+          .map((b) => (
+            <Marker
+              key={b.id || `${b.lat}-${b.lng}`}
+              position={new window.naver.maps.LatLng(b.lat, b.lng)}
+              icon={{
+                content: getBusMarker(b.congestion, b.lastbusyn),
+              }}
             />
           ))
       )}
@@ -38,4 +50,4 @@ const BusMarkerList = (props) => {
   );
 };
 
-export default BusMarkerList;
+export default React.memo(BusMarkerList);

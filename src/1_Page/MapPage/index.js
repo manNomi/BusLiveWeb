@@ -20,6 +20,8 @@ const MapPage = () => {
             minZoom={10}
             maxZoom={18}
             zoom={13}>
+            <BusMarkerList nodeListData={busStopData.node} />
+            <NodeMarkers nodeListData={busStopData.node} />
             <BusStopMarkers busStopListData={busStopData.busStop} />
           </NaverMap>
         </MapContainer>

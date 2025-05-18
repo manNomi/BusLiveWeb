@@ -20,7 +20,6 @@ const useGetBusDataHandler = () => {
         setBusData(updateRandomBusNodes(data));
       } else {
         await getBusApiData();
-        setBusData(busApiData);
       }
     };
 
@@ -32,7 +31,7 @@ const useGetBusDataHandler = () => {
     return () => clearInterval(timerId);
   }, [test]);
 
-  return [busData];
+  return [test ? busData : busApiData];
 };
 
 export default useGetBusDataHandler;

@@ -1,5 +1,3 @@
-import React from "react";
-
 const BusStopIconLast = (props) => (
   <svg
     width={`${props.width}px`}
