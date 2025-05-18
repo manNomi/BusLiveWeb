@@ -4,14 +4,15 @@ import { useNavigate } from "react-router-dom";
 import useGetBusChatList from "./model/useGetBusChatList";
 
 const ChatListContainer = () => {
-  const pageChange = useNavigate();
+  const navigate = useNavigate();
   const { busChatList } = useGetBusChatList();
+
   return (
     <STYLE.Container>
       <STYLE.Header>
         <STYLE.BackBtn
           onClick={() => {
-            pageChange("/home");
+            navigate("/home");
           }}></STYLE.BackBtn>
         <STYLE.Logo>목록</STYLE.Logo>
         <STYLE.Title>511번 채팅방</STYLE.Title>
@@ -21,7 +22,11 @@ const ChatListContainer = () => {
           <ChatList
             title={busStation.name}
             onClick={() => {
-              pageChange(`/chat/${busStation.name}`);
+              alert(
+                "현재 서버 점검으로 인해 채팅방 사용이 불가합니다 없습니다."
+              );
+              navigate("/home");
+              // pageChange(`/chat/${busStation.name}`);
             }}
           />
         ))}

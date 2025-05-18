@@ -31,17 +31,15 @@ const BusMarkerList = ({ nodeListData }) => {
           }}
         />
       ) : (
-        disPlayBusPoint
-          .filter((b) => b?.lat && b?.lng)
-          .map((b) => (
-            <Marker
-              key={b.id || `${b.lat}-${b.lng}`}
-              position={new window.naver.maps.LatLng(b.lat, b.lng)}
-              icon={{
-                content: getBusMarker(b.congestion, b.lastbusyn),
-              }}
-            />
-          ))
+        disPlayBusPoint.map((b) => (
+          <Marker
+            key={b.id || `${b.lat}-${b.lng}`}
+            position={new window.naver.maps.LatLng(b.lat, b.lng)}
+            icon={{
+              content: getBusMarker(b.congestion, b.lastbusyn),
+            }}
+          />
+        ))
       )}
     </>
   );
