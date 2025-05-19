@@ -13,7 +13,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18"
@@ -24,38 +24,13 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Prepare SSH key
-        run: |
-          printf '%s' "${{ secrets.PRIVATE_KEY }}" > /tmp/key.pem
-          chmod 600 /tmp/key.pem
-
-      # 키 파일 생성 단계는 제거하고 직접 key 매개변수 사용
-
-      - name: SSH 설정
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-          echo "Host *
-            StrictHostKeyChecking no" > ~/.ssh/config
-          chmod 600 ~/.ssh/config
-
-      - name: Upload build to EC2
+      - name: Upload to EC2
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          # 다음 줄 수정: key_path 사용
-          key_path: /tmp/key.pem
+          key: ${{ secrets.PRIVATE_KEY }} # 여기에 키 내용을 그대로 삽입한 시크릿
           source: "build/*"
           target: "${{ secrets.TARGET_DIR }}"
+          port: 22
           debug: true
-
-      - name: Restart server (optional)
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          # 여기도 일관성을 위해 key_path 사용
-          key_path: /tmp/key.pem
-          script: |
-            echo "배포 완료됨"
