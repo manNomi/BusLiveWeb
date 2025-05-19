@@ -27,7 +27,7 @@ jobs:
 
       - name: Decode SSH Key
         run: |
-          echo "$ENCODED_PRIVATE_KEY" | base64 -d > /tmp/key.pem
+          echo "${{ secrets.ENCODED_PRIVATE_KEY }}" | base64 -d > /tmp/key.pem
           chmod 600 /tmp/key.pem
         env:
           ENCODED_PRIVATE_KEY: ${{ secrets.ENCODED_PRIVATE_KEY }}
@@ -44,7 +44,7 @@ jobs:
           debug: true
 
       - name: Restart server
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
