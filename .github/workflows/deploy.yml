@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -29,21 +30,23 @@ jobs:
           echo "${{ secrets.PRIVATE_KEY_BASE64 }}" | base64 -d > /tmp/key.pem
           chmod 600 /tmp/key.pem
 
-      - name: Upload build to EC2
+      - name: Copy files to EC2
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key_path: /tmp/key.pem
+          port: 22
           source: "build/*"
           target: "${{ secrets.TARGET_DIR }}"
           debug: true
 
-      - name: Restart server (optional)
-        uses: appleboy/ssh-action@master
+      - name: Run remote command
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key_path: /tmp/key.pem
+          port: 22
           script: |
-            echo "배포 완료됨"
+            echo "✅ 배포가 완료되었습니다."
