@@ -32,6 +32,7 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           source: "build/*"
           target: "${{ secrets.TARGET_DIR }}"
+          debug: true
 
       - name: Restart server (optional)
         uses: appleboy/ssh-action@master
@@ -41,4 +42,3 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
             echo "배포 완료됨"
-        debug: true # 👈 ssh -v 가 찍혀서 어떤 키가 보내졌는지 로그로 확인 가능
