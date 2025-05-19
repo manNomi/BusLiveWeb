@@ -13,7 +13,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18"
@@ -24,11 +24,20 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Upload build to EC2 (manual scp)
-        working-directory: ${{ github.workspace }}
-        run: |
-          echo "${{ secrets.PRIVATE_KEY }}" > key.pem
-          chmod 600 key.pem
-          scp -o StrictHostKeyChecking=no -i key.pem -r build/* ${{ secrets.USERNAME }}@${{ secrets.HOST }}:${{ secrets.TARGET_DIR }}
-        env:
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      - name: Upload build to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          source: "build/*"
+          target: "${{ secrets.TARGET_DIR }}"
+
+      - name: Restart server (optional)
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: |
+            echo "배포 완료됨"
