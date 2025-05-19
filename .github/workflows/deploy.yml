@@ -25,6 +25,7 @@ jobs:
         run: npm run build
 
       - name: Upload build to EC2 (manual scp)
+        working-directory: ${{ github.workspace }}
         run: |
           echo "${{ secrets.PRIVATE_KEY }}" > key.pem
           chmod 600 key.pem
