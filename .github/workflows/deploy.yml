@@ -17,10 +17,12 @@ jobs:
         run: |
           echo "${{ secrets.PRIVATE_KEY }}" > /tmp/key.pem
           chmod 600 /tmp/key.pem
-          echo "📡 HOST value: '${{ secrets.HOST }}'"
-          ssh -vvv -o StrictHostKeyChecking=no -i /tmp/key.pem ${{ secrets.USERNAME }}@${{ secrets.HOST }} true
+          echo "📡 HOST value: '$HOST'"
+          ssh -vvv -o StrictHostKeyChecking=no -i /tmp/key.pem $USERNAME@$HOST true
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          HOST: ${{ secrets.HOST }}
+          USERNAME: ${{ secrets.USERNAME }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
