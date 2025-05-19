@@ -24,6 +24,11 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Prepare SSH key
+        run: |
+          printf '%s' "${{ secrets.PRIVATE_KEY }}" > /tmp/key.pem
+          chmod 600 /tmp/key.pem
+
       # 키 파일 생성 단계는 제거하고 직접 key 매개변수 사용
 
       - name: SSH 설정
@@ -39,8 +44,8 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          # 다음 줄 수정: key_path 대신 key 사용
-          key: ${{ secrets.PRIVATE_KEY }}
+          # 다음 줄 수정: key_path 사용
+          key_path: /tmp/key.pem
           source: "build/*"
           target: "${{ secrets.TARGET_DIR }}"
           debug: true
@@ -50,7 +55,7 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          # 여기도 일관성을 위해 key 사용
-          key: ${{ secrets.PRIVATE_KEY }}
+          # 여기도 일관성을 위해 key_path 사용
+          key_path: /tmp/key.pem
           script: |
             echo "배포 완료됨"
