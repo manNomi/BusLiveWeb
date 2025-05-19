@@ -34,15 +34,20 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key_path: /tmp/key.pem # ✅ 여기만 수정
+          key_path: /tmp/key.pem
           source: "build/*"
           target: "${{ secrets.TARGET_DIR }}"
+
+      - name: Prepare SSH key
+        run: |
+          echo "${{ secrets.PRIVATE_KEY }}" > /tmp/key.pem
+          chmod 600 /tmp/key.pem
 
       - name: Restart server (optional)
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key_path: /tmp/key.pem # ✅
+          key_path: /tmp/key.pem
           script: |
             echo "배포 완료됨"
