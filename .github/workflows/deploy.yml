@@ -38,11 +38,6 @@ jobs:
           source: "build/*"
           target: "${{ secrets.TARGET_DIR }}"
 
-      - name: Prepare SSH key
-        run: |
-          echo "${{ secrets.PRIVATE_KEY }}" > /tmp/key.pem
-          chmod 600 /tmp/key.pem
-
       - name: Restart server (optional)
         uses: appleboy/ssh-action@master
         with:
