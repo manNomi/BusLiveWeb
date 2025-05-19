@@ -11,7 +11,7 @@ const useChatListParam = (pageChange) => {
       );
       navigate("/home");
     }
-  }, [param]);
+  }, [param, navigate]);
   return { param };
 };
 export default useChatListParam;

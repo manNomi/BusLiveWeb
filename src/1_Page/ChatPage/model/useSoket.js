@@ -46,6 +46,7 @@ const useSoket = (nickname, setMessages) => {
     return () => {
       socket.current.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // 빈 의존성 배열로 한 번만 실행
   return { room, joinRoom, sendMessage };
 };

@@ -29,7 +29,7 @@ const useGetBusDataHandler = () => {
     // 10초마다 폴링
     timerId = setInterval(fetchData, 10000);
     return () => clearInterval(timerId);
-  }, [test]);
+  }, [test, getBusApiData]);
 
   return [test ? busData : busApiData];
 };

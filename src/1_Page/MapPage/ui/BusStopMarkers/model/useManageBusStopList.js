@@ -18,6 +18,7 @@ const useManageBusStopList = (busStopListData) => {
     } else {
       handleBusDirection(BUS_STOP_CONFIG.DIRECTION.DOWN);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [check.low]);
 
   useEffect(() => {
@@ -26,6 +27,7 @@ const useManageBusStopList = (busStopListData) => {
     } else {
       handleBusDirection(BUS_STOP_CONFIG.DIRECTION.UP);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [check.high]);
 
   const filterBusStops = (threshold, type) => {

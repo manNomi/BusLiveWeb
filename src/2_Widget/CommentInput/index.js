@@ -6,7 +6,6 @@ const CommentInput = ({ onSendMessage }) => {
     register,
     handleSubmit,
     reset,
-    setValue,
     formState: { errors },
   } = useForm();
 

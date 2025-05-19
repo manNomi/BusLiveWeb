@@ -17,7 +17,7 @@ export const useGetBusStopData = (busId) => {
     }
     const url = `${endpoint}?busId=${busId}`;
     request("GET", url);
-  }, [busId]);
+  }, [busId, request, endpoint]);
 
   React.useEffect(() => {
     if (serverState?.status) {

@@ -66,7 +66,7 @@ const useManageBusData = (busData, nodeListData) => {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     };
-  }, [setDisPlayBusPoint]);
+  }, [setDisPlayBusPoint, nodeListData]);
 
   useEffect(() => {
     if (busData) {
@@ -101,6 +101,7 @@ const useManageBusData = (busData, nodeListData) => {
       moveBusEvent();
       setIsBusDataUpdated(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isBusDataUpdated, check.test, disPlayBusPoint]);
 
   const setClickBusOnly = (busList) => {

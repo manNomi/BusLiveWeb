@@ -1,5 +1,3 @@
-import axios from "axios";
-
 const example = {
   rows: [
     {
@@ -18,11 +16,6 @@ const example = {
 const getBusChatList = async () => {
   try {
     return example.rows;
-    const endpoint = "https://api.example.com/bus-chat-list";
-    const response = await axios.get(endpoint);
-
-    // API 응답 구조 변환
-    return response.rows;
   } catch (error) {
     console.error("채팅방 리스트를 불러오는 데 실패했습니다:", error);
     throw new Error("채팅방 리스트를 가져올 수 없습니다.");

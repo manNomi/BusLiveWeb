@@ -24,7 +24,7 @@ const useGetBusData = () => {
           console.error("알 수 없는 오류입니다.");
       }
     }
-  }, [serverState]);
+  }, [serverState, setCheckTypeEvent]);
 
   return [busData, getBusData];
 };
