@@ -1,9 +1,8 @@
-import React from "react";
 import STYLE from "./style";
-import useKakaoLogin from "./model/useKakaoLogin";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const { handleLogin } = useKakaoLogin();
+  const navigate = useNavigate();
 
   return (
     <STYLE.Container>
@@ -11,8 +10,11 @@ const LoginPage = () => {
         <STYLE.GlassBox>
           <STYLE.Title>LIVE BUS</STYLE.Title>
           <STYLE.SocialLoginContainer>
-            <STYLE.KakaoButton onClick={handleLogin}>
-              카카오 로그인
+            <STYLE.KakaoButton
+              onClick={
+                () => navigate("/map") // 로그인 없이 이동
+              }>
+              로그인 없이 이용하세요 ~
             </STYLE.KakaoButton>
           </STYLE.SocialLoginContainer>
         </STYLE.GlassBox>

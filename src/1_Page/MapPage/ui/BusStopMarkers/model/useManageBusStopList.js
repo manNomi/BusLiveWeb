@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import BUS_STOP_CONFIG from "../config/busStopConfig";
+import BUS_STOP_CONFIG from "../constant/busStopConfig";
 
 import useCheckAtom from "../../../../../4_Shared/recoil/useCheckAtom";
 

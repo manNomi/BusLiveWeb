@@ -1,4 +1,4 @@
-import Busicon from "../../../../assets/BusIcon";
+import Busicon from "../../../../../../4_Shared/assets/BusStopIcon";
 import STYLE from "./style";
 import useExplainHandler from "./model/useExplainHandler";
 

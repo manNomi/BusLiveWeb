@@ -1,24 +1,35 @@
 import Style from "./style";
 import useCheckAtom from "../../../../4_Shared/recoil/useCheckAtom";
-import useAsideHandler from "./model/useAsideHandler";
 import { useNavigate } from "react-router-dom";
 
 import ExplainBusState from "./ui/ExplainBusState";
 import CheckBox from "./ui/CheckBox";
-import HoverIcon from "./ui/HoverIcon";
+import MinusIcon from "../../../../4_Shared/assets/MinusIcon";
+import PlusIcon from "../../../../4_Shared/assets/PlusIcon";
 import TextBox from "./ui/TextBox";
-import SearchContainer from "./ui/SearchContainer";
+import useToggleState from "../../../../4_Shared/model/useToggleState";
 
 const Aside = () => {
-  const [isAsideOpen, setAsideChangeEvent] = useAsideHandler();
+  const [isAsideOpen, toggleAsideOpen] = useToggleState();
+
   const [check, setCheck] = useCheckAtom();
-  const pageChange = useNavigate();
+  const navigate = useNavigate();
 
   return (
     <>
       <Style.Aside>
         <Style.Button>
-          <HoverIcon onClick={setAsideChangeEvent} isAsideOpen={isAsideOpen} />
+          <Style.Container onClick={toggleAsideOpen}>
+            <Style.Box>
+              <Style.IconWrap>
+                {isAsideOpen ? (
+                  <MinusIcon width="24" height="24" />
+                ) : (
+                  <PlusIcon width="24" height="24" />
+                )}
+              </Style.IconWrap>
+            </Style.Box>
+          </Style.Container>
         </Style.Button>
         {isAsideOpen && (
           <div>
@@ -32,7 +43,7 @@ const Aside = () => {
             <TextBox
               text="채팅방"
               onClick={() => {
-                pageChange("/chatList");
+                navigate("/chatList");
               }}
             />
             <CheckBox
