@@ -4,7 +4,7 @@ import Style from "./style";
 
 import ChatMessage from "./ui/ChatMessage";
 import InputNickNameModal from "./ui/InputNickNameModal";
-import CommentInput from "../../2_Widget/Comment_input";
+import CommentInput from "../../2_Widget/CommentInput";
 
 import useChatListParam from "./model/useChatListParam";
 import useScrollDown from "./model/useScrollDown";
