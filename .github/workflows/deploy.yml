@@ -1,10 +1,8 @@
-name: Deploy React App to AWS EC2
+name: Deploy React App to EC2
 
 on:
   push:
-    branches:
-      - master
-  workflow_dispatch:
+    branches: [master] # 배포할 브랜치
 
 jobs:
   deploy:
@@ -14,41 +12,34 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-
       - name: Install dependencies
         run: npm install
 
-      - name: Build project
+      - name: Build React App
         run: npm run build
 
-      - name: Decode SSH Key
+      - name: Add SSH key
         run: |
-          echo "${{ secrets.ENCODED_PRIVATE_KEY }}" | base64 -d > /tmp/key.pem
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > /tmp/key.pem
           chmod 600 /tmp/key.pem
-        env:
-          ENCODED_PRIVATE_KEY: ${{ secrets.ENCODED_PRIVATE_KEY }}
 
-      - name: Upload build to EC2
+      - name: Upload build folder to EC2
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
           key_path: /tmp/key.pem
-          source: "build/*"
-          target: "${{ secrets.TARGET_DIR }}"
           port: 22
-          debug: true
+          source: "build/*"
+          target: "/home/ubuntu/app" # 원하는 경로로 수정
 
-      - name: Restart server
+      - name: Restart server or run script
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
           key_path: /tmp/key.pem
           port: 22
           script: |
-            echo "✅ 배포가 완료되었습니다."
+            echo "✅ 파일 업로드 완료"
+            ls /home/ubuntu/app
