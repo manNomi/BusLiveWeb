@@ -13,14 +13,6 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
 
-      - name: Self-test SSH inside runner
-        run: |
-          echo "${{ secrets.PRIVATE_KEY }}" > /tmp/key.pem
-          chmod 600 /tmp/key.pem
-          ssh -vvv -o StrictHostKeyChecking=no -i /tmp/key.pem ${{ secrets.USERNAME }}@${{ secrets.HOST }} true
-        env:
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
