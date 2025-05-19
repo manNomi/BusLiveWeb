@@ -1,0 +1,17 @@
+name: Deploy Test - Clean Version
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔍 Check HOST secret
+        run: |
+          if [ -z "${{ secrets.HOST }}" ]; then
+            echo "❌ HOST is missing"
+            exit 1
+          else
+            echo "✅ HOST is set: '${{ secrets.HOST }}'"
+          fi
