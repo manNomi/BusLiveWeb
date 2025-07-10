@@ -1,10 +1,10 @@
 import axios from "axios";
-import React from "react";
+import React, { useCallback } from "react";
 
 export const useFetchData = () => {
   const [serverState, setServerState] = React.useState(null);
 
-  const request = async (method, url, body = null, token = "") => {
+  const request = useCallback(async (method, url, body = null, token = "") => {
     try {
       const headers = {
         "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export const useFetchData = () => {
         });
       }
     }
-  };
+  }, []);
 
   return [serverState, request];
 };

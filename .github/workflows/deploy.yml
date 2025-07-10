@@ -41,8 +41,8 @@ jobs:
           key_path: /tmp/key.pem
           port: 22
           script: |
-            echo "REACT_APP_NAVER_CLIENT_ID=wjb1z9zmxh" > /home/ubuntu/app/.env
-            echo "REACT_APP_API_URL=http://43.202.84.174:7700/bus/info/all" >> /home/ubuntu/app/.env
+            echo "REACT_APP_NAVER_CLIENT_ID=${{ secrets.REACT_APP_NAVER_CLIENT_ID }}" > /home/ubuntu/app/.env
+            echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" >> /home/ubuntu/app/.env
 
       - name: Restart server or run script
         uses: appleboy/ssh-action@master
