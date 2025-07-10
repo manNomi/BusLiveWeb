@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useCallback } from "react";
 import { useFetchData } from "../../4_Shared/util/apiUtil";
 import useCheckAtom from "../../4_Shared/recoil/useCheckAtom";
 
@@ -6,11 +6,11 @@ const useGetBusData = () => {
   const [busData, setBusData] = React.useState([]);
   const [serverState, request] = useFetchData();
   const [, setCheckTypeEvent] = useCheckAtom();
-  const endpoint = process.env.REACT_APP_API_URL + "/bus";
+  const endpoint = useMemo(() => process.env.REACT_APP_API_URL + "/bus", []);
 
-  const getBusData = () => {
+  const getBusData = useCallback(() => {
     request("GET", endpoint);
-  };
+  }, [request, endpoint]);
 
   React.useEffect(() => {
     if (serverState?.status) {

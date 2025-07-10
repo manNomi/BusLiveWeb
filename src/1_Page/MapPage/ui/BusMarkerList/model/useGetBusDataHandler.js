@@ -10,6 +10,7 @@ const useGetBusDataHandler = () => {
   const [busData, setBusData] = React.useState([]);
   const [busApiData, getBusApiData] = useGetBusData();
   const [{ test }] = useCheckAtom();
+  const prevBusDataStringRef = React.useRef("");
 
   React.useEffect(() => {
     let timerId;
@@ -17,7 +18,15 @@ const useGetBusDataHandler = () => {
 
     const fetchData = async () => {
       if (test) {
-        setBusData(updateRandomBusNodes(data));
+        const newBusData = updateRandomBusNodes(data);
+        // 실제로 데이터가 변경된 경우에만 상태 업데이트
+        const newBusDataString = JSON.stringify(
+          newBusData.map((bus) => bus.lastNode)
+        );
+        if (prevBusDataStringRef.current !== newBusDataString) {
+          setBusData(newBusData);
+          prevBusDataStringRef.current = newBusDataString;
+        }
       } else {
         await getBusApiData();
       }

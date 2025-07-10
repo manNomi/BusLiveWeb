@@ -1,5 +1,6 @@
 import { atom, useSetRecoilState } from "recoil";
 import { useRecoilValue } from "recoil";
+import { useCallback } from "react";
 
 const checkAtom = atom({
   key: "CHECK",
@@ -9,12 +10,15 @@ const checkAtom = atom({
 const useCheckAtom = () => {
   const check = useRecoilValue(checkAtom);
   const setCheck = useSetRecoilState(checkAtom);
-  const setCheckTypeEvent = (key) => {
-    setCheck((prevState) => ({
-      ...prevState,
-      [key]: !prevState[key],
-    }));
-  };
+  const setCheckTypeEvent = useCallback(
+    (key) => {
+      setCheck((prevState) => ({
+        ...prevState,
+        [key]: !prevState[key],
+      }));
+    },
+    [setCheck]
+  );
 
   return [check, setCheckTypeEvent];
 };

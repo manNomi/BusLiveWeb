@@ -1,21 +1,34 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import useCheckAtom from "../../../../../4_Shared/recoil/useCheckAtom";
 
 const useManageBusData = (busData, nodeListData) => {
   const [disPlayBusPoint, setDisPlayBusPoint] = useState([]);
-  const [isBusDataUpdated, setIsBusDataUpdated] = useState(false);
   const { id: busStopId } = useParams();
-  const [check] = useCheckAtom();
 
   const intervalRef = useRef(null);
+  const busDataStringRef = useRef("");
+  const isInitializedRef = useRef(false);
+  const updateCountRef = useRef(0);
 
-  const moveBusEvent = useCallback(() => {
+  // 애니메이션 시작 함수
+  const startAnimation = useCallback(() => {
+    // 이미 interval이 실행 중이라면 정리
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
     const speed = 10;
-    // 이미 interval이 실행 중이라면 새로 설정하지 않음
-    if (intervalRef.current) return;
+    updateCountRef.current = 0; // 카운터 초기화
 
     intervalRef.current = setInterval(() => {
+      updateCountRef.current++;
+
+      // 5번마다만 상태 업데이트 (500ms마다)
+      if (updateCountRef.current % 5 !== 0) {
+        return;
+      }
+
       setDisPlayBusPoint((prevBus) =>
         prevBus.map((busLocation) => {
           const nextNode = nodeListData.find(
@@ -50,7 +63,7 @@ const useManageBusData = (busData, nodeListData) => {
           const y = nextNode.lng - busLocation.lng;
           const timeToNextNode = distance / speed;
           const frameRate = 100;
-          const step = frameRate / (timeToNextNode * 1000);
+          const step = (frameRate / (timeToNextNode * 1000)) * 5; // 5배 스텝으로 조정
 
           return {
             ...busLocation,
@@ -60,70 +73,91 @@ const useManageBusData = (busData, nodeListData) => {
         })
       );
     }, 100);
-
-    // interval 정리 함수 반환
-    return () => {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    };
-  }, [setDisPlayBusPoint, nodeListData]);
-
+  }, [nodeListData]); // busData 변경 감지 및 업데이트
   useEffect(() => {
-    if (busData) {
-      setDisPlayBusPoint((prevBus) => {
-        if (prevBus.length === 0) {
-          setIsBusDataUpdated(true);
-          return busData;
-        }
+    if (!busData || busData.length === 0) return;
 
-        let isUpdated = false;
-        const updatedBus = prevBus.map((busLocation, index) => {
-          const newBusData = busData[index];
-          if (!newBusData) return busLocation;
-
-          if (Number(busLocation.lastNode) !== Number(newBusData.lastNode)) {
-            isUpdated = true;
-            return { ...busLocation, ...newBusData };
-          }
-
-          return busLocation;
-        });
-
-        if (isUpdated) setIsBusDataUpdated(true);
-
-        return updatedBus;
-      });
-    }
-  }, [busData]);
-
-  useEffect(() => {
-    if (isBusDataUpdated && disPlayBusPoint.length > 0) {
-      moveBusEvent();
-      setIsBusDataUpdated(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isBusDataUpdated, check.test, disPlayBusPoint]);
-
-  const setClickBusOnly = (busList) => {
-    if (!busStopId || !Array.isArray(busList) || busList.length === 0) {
-      return null;
-    }
-    const candidates = busList.filter(
-      (item) => item.lastNode < parseInt(busStopId)
+    const currentBusDataString = JSON.stringify(
+      busData.map((bus) => bus.lastNode)
     );
 
-    if (candidates.length === 0) {
-      return null; // 필터 결과가 없는 경우
+    // 데이터가 실제로 변경된 경우만 처리
+    if (busDataStringRef.current !== currentBusDataString) {
+      // 초기 로드인지 확인
+      const isInitialLoad = !isInitializedRef.current;
+
+      if (isInitialLoad) {
+        // 초기 로드: 전체 데이터 설정
+        setDisPlayBusPoint(busData);
+        isInitializedRef.current = true;
+
+        // 초기 애니메이션 시작 (지연)
+        setTimeout(() => {
+          startAnimation();
+        }, 100);
+      } else {
+        // 업데이트: 실제 변경된 항목만 업데이트
+        setDisPlayBusPoint((prevBus) => {
+          return prevBus.map((busLocation, index) => {
+            const newBusData = busData[index];
+            if (!newBusData) return busLocation;
+
+            // lastNode가 변경된 경우만 업데이트
+            if (Number(busLocation.lastNode) !== Number(newBusData.lastNode)) {
+              return { ...busLocation, ...newBusData };
+            }
+
+            return busLocation;
+          });
+        });
+
+        // 데이터 변경 시 애니메이션 재시작 (지연)
+        setTimeout(() => {
+          startAnimation();
+        }, 0);
+      }
+
+      busDataStringRef.current = currentBusDataString;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [busData]);
 
-    candidates.sort((a, b) => b.lastNode - a.lastNode);
-    return candidates[0];
-  };
+  // Cleanup interval on unmount
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, []);
 
-  const closestBusLocation =
-    busStopId && disPlayBusPoint.length > 0
-      ? setClickBusOnly(disPlayBusPoint)
-      : null;
+  const setClickBusOnly = useCallback(
+    (busList) => {
+      if (!busStopId || !Array.isArray(busList) || busList.length === 0) {
+        return null;
+      }
+      const candidates = busList.filter(
+        (item) => item.lastNode < parseInt(busStopId)
+      );
+
+      if (candidates.length === 0) {
+        return null; // 필터 결과가 없는 경우
+      }
+
+      candidates.sort((a, b) => b.lastNode - a.lastNode);
+      return candidates[0];
+    },
+    [busStopId]
+  );
+
+  // closestBusLocation을 메모이제이션하여 불필요한 재계산 방지
+  const closestBusLocation = useMemo(() => {
+    if (!busStopId || disPlayBusPoint.length === 0) {
+      return null;
+    }
+    return setClickBusOnly(disPlayBusPoint);
+  }, [busStopId, disPlayBusPoint, setClickBusOnly]);
 
   return { disPlayBusPoint, closestBusLocation };
 };
